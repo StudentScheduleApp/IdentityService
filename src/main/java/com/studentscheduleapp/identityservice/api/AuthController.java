@@ -128,6 +128,8 @@ public class AuthController {
                     return ResponseEntity.ok(token);
                 } catch (AuthException e){
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
