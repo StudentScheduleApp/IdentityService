@@ -46,6 +46,8 @@ public class AuthController {
             return ResponseEntity.ok(token);
         } catch (AuthException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -58,6 +60,8 @@ public class AuthController {
             return ResponseEntity.ok(token);
         } catch (AuthException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -70,6 +74,8 @@ public class AuthController {
             return ResponseEntity.ok(token);
         } catch (AuthException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -83,8 +89,13 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         if(authRequest.getLastName() == null || authRequest.getLastName().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        User usr = userService.getByEmail(authRequest.getEmail());
-        if(usr != null){
+        User usr = null;
+        try {
+            usr = userService.getByEmail(authRequest.getEmail());
+        }  catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        if(usr == null){
             ArrayList<Role> roles = new ArrayList<>();
             roles.add(Role.USER);
             User u = new User(0L, authRequest.getEmail(), authRequest.getPassword(), authRequest.getFirstName(), authRequest.getLastName(), false, null, roles);
@@ -107,7 +118,11 @@ public class AuthController {
         if (verifyUserCache.get(verifyRequest.getEmail()) != null){
             if(verifyService.verify(verifyRequest)){
                 User u = verifyUserCache.get(verifyRequest.getEmail());
-                u = userService.create(u);
+                try {
+                    u = userService.create(u);
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
                 try {
                     final JwtResponse token = authService.login(new JwtLoginRequest(u.getEmail(), u.getPassword()));
                     return ResponseEntity.ok(token);

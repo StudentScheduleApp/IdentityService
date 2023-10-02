@@ -26,6 +26,8 @@ public class VerifyService {
         ResponseEntity<Void> r = new RestTemplate().postForEntity(mailService + "/api/send", new MailRequest(email, "Verify email", String.valueOf(code)), Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             emailCodes.put(email, code);
+        if(r.getStatusCode().isError())
+            throw new Exception("request to " + mailService + " return code " + r.getStatusCode());
         throw new Exception();
     }
 

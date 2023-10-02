@@ -23,7 +23,7 @@ public class AuthService {
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProvider jwtProvider;
 
-    public JwtResponse login(@NonNull JwtLoginRequest authRequest) throws AuthException {
+    public JwtResponse login(@NonNull JwtLoginRequest authRequest) throws Exception {
         final User user = userService.getByEmail(authRequest.getEmail());
         if(user == null)
             throw new AuthException();
@@ -37,7 +37,7 @@ public class AuthService {
         }
     }
 
-    public JwtResponse getAccessToken(@NonNull String refreshToken) throws AuthException {
+    public JwtResponse getAccessToken(@NonNull String refreshToken) throws Exception {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
@@ -53,7 +53,7 @@ public class AuthService {
         return new JwtResponse(null, null);
     }
 
-    public JwtResponse refresh(@NonNull String refreshToken) throws AuthException {
+    public JwtResponse refresh(@NonNull String refreshToken) throws Exception {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
