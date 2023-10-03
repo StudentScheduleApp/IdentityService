@@ -130,7 +130,7 @@ public class IdentityController {
     @PostMapping("authorize")
     public ResponseEntity<Void> authorize(@RequestBody AuthorizeRequest authorizeRequest){
         for(Authorize a : authorizeRequest.getAuthorizes()){
-            if(!authorizeService.authorize(authorizeRequest.getToken(), a))
+            if(!authorizeService.authorize(authorizeRequest.getUserToken(), a))
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok().build();
