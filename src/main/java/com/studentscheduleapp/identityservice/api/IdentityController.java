@@ -1,5 +1,6 @@
 package com.studentscheduleapp.identityservice.api;
 
+import com.studentscheduleapp.identityservice.api.models.AppAuthorizeRequest;
 import com.studentscheduleapp.identityservice.api.models.AuthorizeRequest;
 import com.studentscheduleapp.identityservice.api.models.VerifyRequest;
 import com.studentscheduleapp.identityservice.domain.models.Authorize;
@@ -9,10 +10,7 @@ import com.studentscheduleapp.identityservice.jwt.models.JwtLoginRequest;
 import com.studentscheduleapp.identityservice.jwt.models.JwtRegisterRequest;
 import com.studentscheduleapp.identityservice.jwt.models.JwtResponse;
 import com.studentscheduleapp.identityservice.jwt.models.RefreshJwtRequest;
-import com.studentscheduleapp.identityservice.services.AuthorizeService;
-import com.studentscheduleapp.identityservice.services.IdentityService;
-import com.studentscheduleapp.identityservice.services.UserService;
-import com.studentscheduleapp.identityservice.services.VerifyService;
+import com.studentscheduleapp.identityservice.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,10 +30,15 @@ public class IdentityController {
 
     @Autowired
     private VerifyService verifyService;
-    private Map<String, User> verifyUserCache = new HashMap<>();
-    private final IdentityService identityService;
-    private final AuthorizeService authorizeService;
-    private final UserService userService;
+    @Autowired
+    private IdentityService identityService;
+    @Autowired
+    private AuthorizeService authorizeService;
+    @Autowired
+    private AppAuthorizeService appAuthorizeService;
+    @Autowired
+    private UserService userService;
+    private final Map<String, User> verifyUserCache = new HashMap<>();
 
     @PostMapping("login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtLoginRequest authRequest) throws AuthException {
@@ -134,6 +137,12 @@ public class IdentityController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok().build();
+    }
+    @PostMapping("app/authorize")
+    public ResponseEntity<Void> authorizeApp(@RequestBody AppAuthorizeRequest appAuthorizeRequest){
+        if(appAuthorizeService.authorize(appAuthorizeRequest.getAppToken()))
+            return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
 }

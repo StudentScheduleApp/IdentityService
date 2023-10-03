@@ -32,7 +32,7 @@ public class MemberService {
         return null;
     }
     public List<Member> getByUser(long id) throws Exception {
-        ResponseEntity<List<Member>> r = new RestTemplate().getForEntity(groupService + "/api/member/user" + id, (Class<List<Member>>) new ArrayList<Member>().getClass());
+        ResponseEntity<List> r = new RestTemplate().getForEntity(groupService + "/api/member/user" + id, List.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
