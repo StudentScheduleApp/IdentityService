@@ -2,13 +2,17 @@ package com.studentscheduleapp.identityservice.services;
 
 import com.studentscheduleapp.identityservice.api.models.MailRequest;
 import com.studentscheduleapp.identityservice.api.models.VerifyRequest;
+import com.studentscheduleapp.identityservice.http.HeaderRequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -23,7 +27,11 @@ public class VerifyService {
 
     public void sendCode(String email) throws Exception {
         long code = Math.round(Math.random() * 100000);
-        ResponseEntity<Void> r = new RestTemplate().postForEntity(mailService + "/api/send", new MailRequest(email, "Verify email", String.valueOf(code)), Void.class);
+        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+        interceptors.add(new HeaderRequestInterceptor());
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setInterceptors(interceptors);
+        ResponseEntity<Void> r = restTemplate.postForEntity(mailService + "/api/send", new MailRequest(email, "Verify email", String.valueOf(code)), Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             emailCodes.put(email, code);
         if(r.getStatusCode().isError())
