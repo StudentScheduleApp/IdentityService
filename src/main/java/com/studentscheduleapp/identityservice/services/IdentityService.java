@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class IdentityService {
 
     private final UserService userService;
     private final Map<String, String> refreshStorage = new HashMap<>();

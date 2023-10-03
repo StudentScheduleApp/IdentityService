@@ -1,38 +1,40 @@
 package com.studentscheduleapp.identityservice.api;
 
+import com.studentscheduleapp.identityservice.api.models.AuthorizeRequest;
 import com.studentscheduleapp.identityservice.api.models.VerifyRequest;
+import com.studentscheduleapp.identityservice.domain.models.Authorize;
 import com.studentscheduleapp.identityservice.domain.models.Role;
 import com.studentscheduleapp.identityservice.domain.models.User;
 import com.studentscheduleapp.identityservice.jwt.models.JwtLoginRequest;
 import com.studentscheduleapp.identityservice.jwt.models.JwtRegisterRequest;
 import com.studentscheduleapp.identityservice.jwt.models.JwtResponse;
 import com.studentscheduleapp.identityservice.jwt.models.RefreshJwtRequest;
-import com.studentscheduleapp.identityservice.services.AuthService;
+import com.studentscheduleapp.identityservice.services.AuthorizeService;
+import com.studentscheduleapp.identityservice.services.IdentityService;
 import com.studentscheduleapp.identityservice.services.UserService;
 import com.studentscheduleapp.identityservice.services.VerifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.message.AuthException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("api/")
 @RequiredArgsConstructor
-public class AuthController {
+public class IdentityController {
 
     @Autowired
     private VerifyService verifyService;
     private Map<String, User> verifyUserCache = new HashMap<>();
-    private final AuthService authService;
+    private final IdentityService identityService;
+    private final AuthorizeService authorizeService;
     private final UserService userService;
 
     @PostMapping("login")
@@ -42,7 +44,7 @@ public class AuthController {
         if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         try {
-            final JwtResponse token = authService.login(authRequest);
+            final JwtResponse token = identityService.login(authRequest);
             return ResponseEntity.ok(token);
         } catch (AuthException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -51,26 +53,13 @@ public class AuthController {
         }
     }
 
-    @PostMapping("token")
-    public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) throws AuthException {
-        if(request.getRefreshToken() == null || request.getRefreshToken().isEmpty())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        try {
-            final JwtResponse token = authService.getAccessToken(request.getRefreshToken());
-            return ResponseEntity.ok(token);
-        } catch (AuthException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
     @PostMapping("refresh")
     public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) throws AuthException {
         if(request.getRefreshToken() == null || request.getRefreshToken().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         try {
-            final JwtResponse token = authService.refresh(request.getRefreshToken());
+            final JwtResponse token = identityService.refresh(request.getRefreshToken());
             return ResponseEntity.ok(token);
         } catch (AuthException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -124,7 +113,7 @@ public class AuthController {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
                 try {
-                    final JwtResponse token = authService.login(new JwtLoginRequest(u.getEmail(), u.getPassword()));
+                    final JwtResponse token = identityService.login(new JwtLoginRequest(u.getEmail(), u.getPassword()));
                     return ResponseEntity.ok(token);
                 } catch (AuthException e){
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -136,6 +125,15 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
+    }
+
+    @PostMapping("authorize")
+    public ResponseEntity<Void> authorize(@RequestBody AuthorizeRequest authorizeRequest){
+        for(Authorize a : authorizeRequest.getAuthorizes()){
+            if(!authorizeService.authorize(authorizeRequest.getToken(), a))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok().build();
     }
 
 }
