@@ -140,7 +140,7 @@ public class IdentityController {
         }
         return ResponseEntity.ok().build();
     }
-    @PostMapping("app/authorize")
+    @PostMapping("service/authorize")
     public ResponseEntity<Void> authorizeApp(@RequestBody ServiceAuthorizeRequest serviceAuthorizeRequest){
         if(serviceIdentityService.authorize(serviceAuthorizeRequest.getServiceToken()))
             return ResponseEntity.ok().build();
