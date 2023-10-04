@@ -26,7 +26,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ServiceTokenFilter extends GenericFilterBean {
 
-    private static final String AUTHORIZATION = "App-Token";
+    private static final String AUTHORIZATION = "Service-Token";
     @Autowired
     private ServiceIdentityService serviceIdentityService;
 
