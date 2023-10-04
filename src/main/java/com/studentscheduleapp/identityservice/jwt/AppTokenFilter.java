@@ -3,8 +3,7 @@ package com.studentscheduleapp.identityservice.jwt;
 
 import com.studentscheduleapp.identityservice.domain.models.AppToken;
 import com.studentscheduleapp.identityservice.domain.models.Role;
-import com.studentscheduleapp.identityservice.domain.models.User;
-import com.studentscheduleapp.identityservice.services.AppAuthorizeService;
+import com.studentscheduleapp.identityservice.services.AppIdentityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,13 +28,13 @@ public class AppTokenFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "App-Token";
     @Autowired
-    private AppAuthorizeService appAuthorizeService;
+    private AppIdentityService appIdentityService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
         final String token = getTokenFromRequest((HttpServletRequest) request);
-        if (token != null && appAuthorizeService.authorize(token)) {
-            final AppToken claims = appAuthorizeService.getByToken(token);
+        if (token != null && appIdentityService.authorize(token)) {
+            final AppToken claims = appIdentityService.getByToken(token);
             final AppAuthentication appInfoToken = new AppAuthentication();
             appInfoToken.setAuthenticated(true);
             appInfoToken.setAppName(claims.getAppName());

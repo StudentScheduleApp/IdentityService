@@ -15,12 +15,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.security.auth.message.AuthException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,7 +37,7 @@ public class IdentityController {
     @Autowired
     private AuthorizeService authorizeService;
     @Autowired
-    private AppAuthorizeService appAuthorizeService;
+    private AppIdentityService appIdentityService;
     @Autowired
     private UserService userService;
     private final Map<String, User> verifyUserCache = new HashMap<>();
@@ -140,7 +142,7 @@ public class IdentityController {
     }
     @PostMapping("app/authorize")
     public ResponseEntity<Void> authorizeApp(@RequestBody AppAuthorizeRequest appAuthorizeRequest){
-        if(appAuthorizeService.authorize(appAuthorizeRequest.getAppToken()))
+        if(appIdentityService.authorize(appAuthorizeRequest.getAppToken()))
             return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }

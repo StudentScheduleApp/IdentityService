@@ -1,7 +1,6 @@
 package com.studentscheduleapp.identityservice.services;
 
 
-import com.studentscheduleapp.identityservice.domain.models.Member;
 import com.studentscheduleapp.identityservice.domain.models.User;
 import com.studentscheduleapp.identityservice.http.HeaderRequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;

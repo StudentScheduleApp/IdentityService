@@ -1,13 +1,12 @@
 package com.studentscheduleapp.identityservice.services;
 
 import com.studentscheduleapp.identityservice.domain.models.AppToken;
-import com.studentscheduleapp.identityservice.domain.models.Authorize;
 import com.studentscheduleapp.identityservice.repos.AppTokenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppAuthorizeService {
+public class AppIdentityService {
     @Autowired
     private AppTokenRepo appTokenRepo;
 

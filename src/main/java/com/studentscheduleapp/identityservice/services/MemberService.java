@@ -1,20 +1,15 @@
 package com.studentscheduleapp.identityservice.services;
 
 
-import com.studentscheduleapp.identityservice.api.models.MailRequest;
 import com.studentscheduleapp.identityservice.domain.models.Member;
-import com.studentscheduleapp.identityservice.domain.models.User;
 import com.studentscheduleapp.identityservice.http.HeaderRequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ServerErrorException;
 
-import java.rmi.ServerError;
 import java.util.ArrayList;
 import java.util.List;
 
