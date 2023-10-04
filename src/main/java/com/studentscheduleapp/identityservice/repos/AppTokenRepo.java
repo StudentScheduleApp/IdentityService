@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AppTokenRepo extends JpaRepository<AppToken, Long> {
     boolean existsByAppToken(String appToken);
+    AppToken findByAppToken(String appToken);
 }

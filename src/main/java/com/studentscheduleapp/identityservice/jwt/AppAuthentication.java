@@ -12,15 +12,13 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class JwtAuthentication implements Authentication {
+public class AppAuthentication implements Authentication {
 
     private boolean authenticated;
-    private String username;
-    private String firstName;
-    private Set<Role> roles;
+    private String appName;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() { return roles; }
+    public Collection<? extends GrantedAuthority> getAuthorities() { return null; }
 
     @Override
     public Object getCredentials() { return null; }
@@ -29,7 +27,7 @@ public class JwtAuthentication implements Authentication {
     public Object getDetails() { return null; }
 
     @Override
-    public Object getPrincipal() { return username; }
+    public Object getPrincipal() { return appName; }
 
     @Override
     public boolean isAuthenticated() { return authenticated; }
@@ -40,6 +38,6 @@ public class JwtAuthentication implements Authentication {
     }
 
     @Override
-    public String getName() { return firstName; }
+    public String getName() { return appName; }
 
 }

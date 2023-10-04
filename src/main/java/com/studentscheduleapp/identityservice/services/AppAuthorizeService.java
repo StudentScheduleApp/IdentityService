@@ -1,5 +1,6 @@
 package com.studentscheduleapp.identityservice.services;
 
+import com.studentscheduleapp.identityservice.domain.models.AppToken;
 import com.studentscheduleapp.identityservice.domain.models.Authorize;
 import com.studentscheduleapp.identityservice.repos.AppTokenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,4 +15,7 @@ public class AppAuthorizeService {
         return appTokenRepo.existsByAppToken(token);
     }
 
+    public AppToken getByToken(String token) {
+        return appTokenRepo.findByAppToken(token);
+    }
 }
