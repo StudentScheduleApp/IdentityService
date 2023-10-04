@@ -1,6 +1,6 @@
 package com.studentscheduleapp.identityservice.config;
 
-import com.studentscheduleapp.identityservice.security.AppTokenFilter;
+import com.studentscheduleapp.identityservice.security.ServiceTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    private final AppTokenFilter appTokenFilter;
+    private final ServiceTokenFilter serviceTokenFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,7 +31,7 @@ public class SecurityConfig {
                                 .antMatchers("/api/login", "/api/register", "/api/verify").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
-                                .addFilterAfter(appTokenFilter, BasicAuthenticationFilter.class)
+                                .addFilterAfter(serviceTokenFilter, BasicAuthenticationFilter.class)
                 ).build();
     }
 

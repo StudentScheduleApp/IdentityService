@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppAuthorizeRequest {
+public class ServiceAuthorizeRequest {
 
-    private String appToken;
+    private String serviceToken;
 
 }

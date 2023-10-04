@@ -11,13 +11,13 @@ import java.io.IOException;
 public class HeaderRequestInterceptor implements ClientHttpRequestInterceptor {
 
 
-    @Value("${app.token}")
-    private String appTokenValue;
+    @Value("${service.token}")
+    private String serviceTokenValue;
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        String headerName = "App-Token";
-        request.getHeaders().set(headerName, appTokenValue);
+        String headerName = "Service-Token";
+        request.getHeaders().set(headerName, serviceTokenValue);
         return execution.execute(request, body);
     }
 }

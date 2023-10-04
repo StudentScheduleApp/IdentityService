@@ -11,15 +11,15 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "app_tokens")
-public class AppToken {
+@Table(name = "service_tokens")
+public class ServiceToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private long id;
-    @Column(name = "app_name", nullable = false)
-    private String appName;
-    @Column(name = "app_token", nullable = false)
-    private String appToken;
+    @Column(name = "service_name", nullable = false)
+    private String serviceName;
+    @Column(name = "service_token", nullable = false)
+    private String serviceToken;
 }

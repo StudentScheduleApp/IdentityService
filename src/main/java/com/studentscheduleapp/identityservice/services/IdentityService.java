@@ -1,7 +1,7 @@
 package com.studentscheduleapp.identityservice.services;
 
 import com.studentscheduleapp.identityservice.domain.models.User;
-import com.studentscheduleapp.identityservice.security.AppAuthentication;
+import com.studentscheduleapp.identityservice.security.ServiceAuthentication;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.security.models.JwtLoginRequest;
 import com.studentscheduleapp.identityservice.security.models.JwtResponse;
@@ -71,8 +71,8 @@ public class IdentityService {
         throw new AuthException();
     }
 
-    public AppAuthentication getAuthInfo() {
-        return (AppAuthentication) SecurityContextHolder.getContext().getAuthentication();
+    public ServiceAuthentication getAuthInfo() {
+        return (ServiceAuthentication) SecurityContextHolder.getContext().getAuthentication();
     }
 
 }

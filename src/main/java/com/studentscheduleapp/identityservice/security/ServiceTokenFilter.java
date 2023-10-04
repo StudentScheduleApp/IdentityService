@@ -1,9 +1,9 @@
 package com.studentscheduleapp.identityservice.security;
 
 
-import com.studentscheduleapp.identityservice.domain.models.AppToken;
+import com.studentscheduleapp.identityservice.domain.models.ServiceToken;
 import com.studentscheduleapp.identityservice.domain.models.Role;
-import com.studentscheduleapp.identityservice.services.AppIdentityService;
+import com.studentscheduleapp.identityservice.services.ServiceIdentityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +24,20 @@ import java.util.Set;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AppTokenFilter extends GenericFilterBean {
+public class ServiceTokenFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "App-Token";
     @Autowired
-    private AppIdentityService appIdentityService;
+    private ServiceIdentityService serviceIdentityService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
         final String token = getTokenFromRequest((HttpServletRequest) request);
-        if (token != null && appIdentityService.authorize(token)) {
-            final AppToken claims = appIdentityService.getByToken(token);
-            final AppAuthentication appInfoToken = new AppAuthentication();
+        if (token != null && serviceIdentityService.authorize(token)) {
+            final ServiceToken claims = serviceIdentityService.getByToken(token);
+            final ServiceAuthentication appInfoToken = new ServiceAuthentication();
             appInfoToken.setAuthenticated(true);
-            appInfoToken.setAppName(claims.getAppName());
+            appInfoToken.setServiceName(claims.getServiceName());
             Set<Role> roles = new HashSet<>();
             SecurityContextHolder.getContext().setAuthentication(appInfoToken);
         }

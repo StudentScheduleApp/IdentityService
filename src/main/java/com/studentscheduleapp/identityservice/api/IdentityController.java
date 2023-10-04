@@ -1,6 +1,6 @@
 package com.studentscheduleapp.identityservice.api;
 
-import com.studentscheduleapp.identityservice.api.models.AppAuthorizeRequest;
+import com.studentscheduleapp.identityservice.api.models.ServiceAuthorizeRequest;
 import com.studentscheduleapp.identityservice.api.models.AuthorizeRequest;
 import com.studentscheduleapp.identityservice.api.models.VerifyRequest;
 import com.studentscheduleapp.identityservice.domain.models.Authorize;
@@ -37,7 +37,7 @@ public class IdentityController {
     @Autowired
     private AuthorizeService authorizeService;
     @Autowired
-    private AppIdentityService appIdentityService;
+    private ServiceIdentityService serviceIdentityService;
     @Autowired
     private UserService userService;
     private final Map<String, User> verifyUserCache = new HashMap<>();
@@ -141,8 +141,8 @@ public class IdentityController {
         return ResponseEntity.ok().build();
     }
     @PostMapping("app/authorize")
-    public ResponseEntity<Void> authorizeApp(@RequestBody AppAuthorizeRequest appAuthorizeRequest){
-        if(appIdentityService.authorize(appAuthorizeRequest.getAppToken()))
+    public ResponseEntity<Void> authorizeApp(@RequestBody ServiceAuthorizeRequest serviceAuthorizeRequest){
+        if(serviceIdentityService.authorize(serviceAuthorizeRequest.getServiceToken()))
             return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }

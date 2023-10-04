@@ -10,10 +10,10 @@ import java.util.Collection;
 
 @Getter
 @Setter
-public class AppAuthentication implements Authentication {
+public class ServiceAuthentication implements Authentication {
 
     private boolean authenticated;
-    private String appName;
+    private String serviceName;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { return null; }
@@ -25,7 +25,7 @@ public class AppAuthentication implements Authentication {
     public Object getDetails() { return null; }
 
     @Override
-    public Object getPrincipal() { return appName; }
+    public Object getPrincipal() { return serviceName; }
 
     @Override
     public boolean isAuthenticated() { return authenticated; }
@@ -36,6 +36,6 @@ public class AppAuthentication implements Authentication {
     }
 
     @Override
-    public String getName() { return appName; }
+    public String getName() { return serviceName; }
 
 }
