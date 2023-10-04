@@ -1,6 +1,6 @@
 package com.studentscheduleapp.identityservice.config;
 
-import com.studentscheduleapp.identityservice.jwt.AppTokenFilter;
+import com.studentscheduleapp.identityservice.security.AppTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

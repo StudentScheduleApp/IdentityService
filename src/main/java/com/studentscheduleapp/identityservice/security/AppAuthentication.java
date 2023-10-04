@@ -1,4 +1,4 @@
-package com.studentscheduleapp.identityservice.jwt;
+package com.studentscheduleapp.identityservice.security;
 
 
 import lombok.Getter;
