@@ -44,7 +44,6 @@ public class UserService {
         return null;
     }
     public User create(User user) throws Exception {
-        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
         ResponseEntity<User> r = restTemplate.postForEntity(userService + "/api/user/create", user, User.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
