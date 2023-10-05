@@ -3,6 +3,7 @@ package com.studentscheduleapp.identityservice.services;
 import com.studentscheduleapp.identityservice.api.models.MailRequest;
 import com.studentscheduleapp.identityservice.api.models.VerifyRequest;
 import com.studentscheduleapp.identityservice.http.HeaderRequestInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -23,13 +24,12 @@ public class VerifyService {
     @Value("${ip.mailservice}")
     private String mailService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
 
     public void sendCode(String email) throws Exception {
         long code = Math.round(Math.random() * 100000);
-        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
-        interceptors.add(new HeaderRequestInterceptor());
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setInterceptors(interceptors);
         ResponseEntity<Void> r = restTemplate.postForEntity(mailService + "/api/send", new MailRequest(email, "Verify email", String.valueOf(code)), Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             emailCodes.put(email, code);
