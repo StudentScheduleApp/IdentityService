@@ -1,22 +1,18 @@
 package com.studentscheduleapp.identityservice.services;
 
-import com.studentscheduleapp.identityservice.api.models.MailRequest;
-import com.studentscheduleapp.identityservice.api.models.VerifyRequest;
-import com.studentscheduleapp.identityservice.http.HeaderRequestInterceptor;
+import com.studentscheduleapp.identityservice.api.models.SendMailRequest;
+import com.studentscheduleapp.identityservice.api.models.VerifyEmailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class VerifyService {
+public class VerifyEmailService {
 
 
     private Map<String, Long> emailCodes = new HashMap<>();
@@ -30,7 +26,7 @@ public class VerifyService {
 
     public void sendCode(String email) throws Exception {
         long code = Math.round(Math.random() * 100000);
-        ResponseEntity<Void> r = restTemplate.postForEntity(mailService + "/api/send", new MailRequest(email, "Verify email", String.valueOf(code)), Void.class);
+        ResponseEntity<Void> r = restTemplate.postForEntity(mailService + "/api/send", new SendMailRequest(email, "Verify email", String.valueOf(code)), Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             emailCodes.put(email, code);
         if(r.getStatusCode().isError())
@@ -38,9 +34,9 @@ public class VerifyService {
         throw new Exception();
     }
 
-    public boolean verify(VerifyRequest verifyRequest){
-        if(emailCodes.get(verifyRequest.getEmail()) != null && emailCodes.get(verifyRequest.getEmail()).equals(verifyRequest.getCode())){
-            emailCodes.remove(verifyRequest.getEmail());
+    public boolean verify(VerifyEmailRequest verifyEmailRequest){
+        if(emailCodes.get(verifyEmailRequest.getEmail()) != null && emailCodes.get(verifyEmailRequest.getEmail()).equals(verifyEmailRequest.getCode())){
+            emailCodes.remove(verifyEmailRequest.getEmail());
             return true;
         }
         return false;
