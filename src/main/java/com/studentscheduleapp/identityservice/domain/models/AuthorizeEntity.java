@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Authorize {
+public class AuthorizeEntity {
     private List<Long> ids;
     private String entity;
     private List<String> params;

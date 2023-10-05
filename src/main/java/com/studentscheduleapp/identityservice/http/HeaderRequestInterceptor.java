@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
 public class HeaderRequestInterceptor implements ClientHttpRequestInterceptor {
 
 
@@ -27,12 +26,4 @@ public class HeaderRequestInterceptor implements ClientHttpRequestInterceptor {
         return execution.execute(request, body);
     }
 
-    @Bean
-    public RestTemplate restTemplate(){
-        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
-        interceptors.add(new HeaderRequestInterceptor());
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setInterceptors(interceptors);
-        return restTemplate;
-    }
 }

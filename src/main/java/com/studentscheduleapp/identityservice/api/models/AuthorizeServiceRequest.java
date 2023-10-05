@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MailRequest {
+public class AuthorizeServiceRequest {
 
-    private String email;
-    private String title;
-    private String body;
+    private String serviceToken;
 
 }

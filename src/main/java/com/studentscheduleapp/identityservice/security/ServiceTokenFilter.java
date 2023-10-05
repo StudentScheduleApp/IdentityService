@@ -3,7 +3,7 @@ package com.studentscheduleapp.identityservice.security;
 
 import com.studentscheduleapp.identityservice.domain.models.ServiceToken;
 import com.studentscheduleapp.identityservice.domain.models.Role;
-import com.studentscheduleapp.identityservice.services.ServiceIdentityService;
+import com.studentscheduleapp.identityservice.services.AuthorizeServiceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +28,13 @@ public class ServiceTokenFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "Service-Token";
     @Autowired
-    private ServiceIdentityService serviceIdentityService;
+    private AuthorizeServiceService authorizeServiceService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
         final String token = getTokenFromRequest((HttpServletRequest) request);
-        if (token != null && serviceIdentityService.authorize(token)) {
-            final ServiceToken claims = serviceIdentityService.getByToken(token);
+        if (token != null && authorizeServiceService.authorize(token)) {
+            final ServiceToken claims = authorizeServiceService.getByToken(token);
             final ServiceAuthentication appInfoToken = new ServiceAuthentication();
             appInfoToken.setAuthenticated(true);
             appInfoToken.setServiceName(claims.getServiceName());
