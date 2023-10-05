@@ -3,6 +3,7 @@ package com.studentscheduleapp.identityservice.services;
 
 import com.studentscheduleapp.identityservice.domain.models.User;
 import com.studentscheduleapp.identityservice.http.HeaderRequestInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,10 @@ public class UserService {
     @Value("${ip.userservice}")
     private String userService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     public User getByEmail(String email) throws Exception {
-        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
-        interceptors.add(new HeaderRequestInterceptor());
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setInterceptors(interceptors);
         ResponseEntity<User> r = restTemplate.getForEntity(userService + "/api/user/" + email, User.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
@@ -34,10 +34,6 @@ public class UserService {
         return null;
     }
     public User getById(long id) throws Exception {
-        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
-        interceptors.add(new HeaderRequestInterceptor());
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setInterceptors(interceptors);
         ResponseEntity<User> r = restTemplate.getForEntity(userService + "/api/user/" + id, User.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
@@ -49,9 +45,6 @@ public class UserService {
     }
     public User create(User user) throws Exception {
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
-        interceptors.add(new HeaderRequestInterceptor());
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setInterceptors(interceptors);
         ResponseEntity<User> r = restTemplate.postForEntity(userService + "/api/user/create", user, User.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
