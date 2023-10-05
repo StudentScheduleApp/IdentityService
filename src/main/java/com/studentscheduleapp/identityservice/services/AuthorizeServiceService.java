@@ -14,7 +14,4 @@ public class AuthorizeServiceService {
         return serviceTokenRepo.existsByServiceToken(token);
     }
 
-    public ServiceToken getByToken(String token) {
-        return serviceTokenRepo.findByServiceToken(token);
-    }
 }

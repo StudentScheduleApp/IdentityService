@@ -34,11 +34,9 @@ public class ServiceTokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
         final String token = getTokenFromRequest((HttpServletRequest) request);
         if (token != null && authorizeServiceService.authorize(token)) {
-            final ServiceToken claims = authorizeServiceService.getByToken(token);
             final ServiceAuthentication appInfoToken = new ServiceAuthentication();
             appInfoToken.setAuthenticated(true);
-            appInfoToken.setServiceName(claims.getServiceName());
-            Set<Role> roles = new HashSet<>();
+            appInfoToken.setServiceName("service");
             SecurityContextHolder.getContext().setAuthentication(appInfoToken);
         }
         fc.doFilter(request, response);

@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ServiceTokenRepo extends JpaRepository<ServiceToken, Long> {
     boolean existsByServiceToken(String serviceToken);
-    ServiceToken findByServiceToken(String serviceToken);
 }

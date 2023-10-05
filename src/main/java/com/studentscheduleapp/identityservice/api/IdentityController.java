@@ -24,6 +24,7 @@ import javax.security.auth.message.AuthException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("api/")
@@ -42,8 +43,8 @@ public class IdentityController {
     private UserService userService;
     private final Map<String, User> verifyUserCache = new HashMap<>();
 
-    @PostMapping("login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtLoginRequest authRequest) throws AuthException {
+    @PostMapping("user/login")
+    public ResponseEntity<JwtResponse> login(@RequestBody JwtLoginRequest authRequest) {
         if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty())
@@ -59,8 +60,8 @@ public class IdentityController {
     }
 
 
-    @PostMapping("refresh")
-    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) throws AuthException {
+    @PostMapping("user/refresh")
+    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
         if(request.getRefreshToken() == null || request.getRefreshToken().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         try {
@@ -73,8 +74,8 @@ public class IdentityController {
         }
     }
 
-    @PostMapping("register")
-    public ResponseEntity<Void> register(@RequestBody JwtRegisterRequest authRequest) throws AuthException {
+    @PostMapping("user/register")
+    public ResponseEntity<Void> register(@RequestBody JwtRegisterRequest authRequest) {
         if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty())
@@ -107,7 +108,7 @@ public class IdentityController {
 
     }
 
-    @PostMapping("verify")
+    @PostMapping("user/verify")
     public ResponseEntity<JwtResponse> verify(@RequestBody VerifyEmailRequest verifyEmailRequest){
         if (verifyUserCache.get(verifyEmailRequest.getEmail()) != null){
             if(verifyEmailService.verify(verifyEmailRequest)){
@@ -132,19 +133,17 @@ public class IdentityController {
 
     }
 
-    @PostMapping("authorize")
-    public ResponseEntity<Void> authorize(@RequestBody AuthorizeUserRequest authorizeUserRequest){
+    @PostMapping("user/authorize")
+    public ResponseEntity<Boolean> authorize(@RequestBody AuthorizeUserRequest authorizeUserRequest){
         for(AuthorizeEntity a : authorizeUserRequest.getAuthorizeEntities()){
             if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), a))
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                return ResponseEntity.ok(false);
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(true);
     }
     @PostMapping("service/authorize")
-    public ResponseEntity<Void> authorizeApp(@RequestBody AuthorizeServiceRequest authorizeServiceRequest){
-        if(authorizeServiceService.authorize(authorizeServiceRequest.getServiceToken()))
-            return ResponseEntity.ok().build();
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<Boolean> authorizeApp(@RequestBody AuthorizeServiceRequest authorizeServiceRequest){
+        return ResponseEntity.ok(authorizeServiceService.authorize(authorizeServiceRequest.getServiceToken()));
     }
 
 }
