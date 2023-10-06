@@ -1,4 +1,4 @@
-package com.studentscheduleapp.identityservice.domain.models;
+package com.studentscheduleapp.identityservice.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,11 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtLoginRequest {
+public class JwtRegisterRequest {
 
     private String email;
     private String password;
+    private String firstName;
+    private String lastName;
 
 }

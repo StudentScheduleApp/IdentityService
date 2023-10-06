@@ -1,4 +1,4 @@
-package com.studentscheduleapp.identityservice.domain.models;
+package com.studentscheduleapp.identityservice.models;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

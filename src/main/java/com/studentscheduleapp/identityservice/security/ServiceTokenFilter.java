@@ -1,8 +1,6 @@
 package com.studentscheduleapp.identityservice.security;
 
 
-import com.studentscheduleapp.identityservice.domain.models.ServiceToken;
-import com.studentscheduleapp.identityservice.domain.models.Role;
 import com.studentscheduleapp.identityservice.services.AuthorizeServiceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +16,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 @Slf4j
 @Component

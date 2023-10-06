@@ -1,15 +1,15 @@
 package com.studentscheduleapp.identityservice.api;
 
-import com.studentscheduleapp.identityservice.domain.models.AuthorizeServiceRequest;
-import com.studentscheduleapp.identityservice.domain.models.AuthorizeUserRequest;
-import com.studentscheduleapp.identityservice.domain.models.VerifyEmailRequest;
-import com.studentscheduleapp.identityservice.domain.models.AuthorizeEntity;
-import com.studentscheduleapp.identityservice.domain.models.Role;
-import com.studentscheduleapp.identityservice.domain.models.User;
-import com.studentscheduleapp.identityservice.domain.models.JwtLoginRequest;
-import com.studentscheduleapp.identityservice.domain.models.JwtRegisterRequest;
-import com.studentscheduleapp.identityservice.domain.models.JwtResponse;
-import com.studentscheduleapp.identityservice.domain.models.RefreshJwtRequest;
+import com.studentscheduleapp.identityservice.models.AuthorizeServiceRequest;
+import com.studentscheduleapp.identityservice.models.AuthorizeUserRequest;
+import com.studentscheduleapp.identityservice.models.VerifyEmailRequest;
+import com.studentscheduleapp.identityservice.models.AuthorizeEntity;
+import com.studentscheduleapp.identityservice.models.Role;
+import com.studentscheduleapp.identityservice.models.User;
+import com.studentscheduleapp.identityservice.models.JwtLoginRequest;
+import com.studentscheduleapp.identityservice.models.JwtRegisterRequest;
+import com.studentscheduleapp.identityservice.models.JwtResponse;
+import com.studentscheduleapp.identityservice.models.RefreshJwtRequest;
 import com.studentscheduleapp.identityservice.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

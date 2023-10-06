@@ -1,4 +1,4 @@
-package com.studentscheduleapp.identityservice.domain.models;
+package com.studentscheduleapp.identityservice.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerifyEmailRequest {
+public class SendMailRequest {
 
     private String email;
-    private long code;
+    private String title;
+    private String body;
 
 }

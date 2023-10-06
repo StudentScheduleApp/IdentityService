@@ -1,6 +1,6 @@
 package com.studentscheduleapp.identityservice.repos;
 
-import com.studentscheduleapp.identityservice.domain.models.User;
+import com.studentscheduleapp.identityservice.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

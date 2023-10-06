@@ -1,10 +1,10 @@
 package com.studentscheduleapp.identityservice.services;
 
-import com.studentscheduleapp.identityservice.domain.models.User;
+import com.studentscheduleapp.identityservice.models.User;
 import com.studentscheduleapp.identityservice.security.ServiceAuthentication;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
-import com.studentscheduleapp.identityservice.domain.models.JwtLoginRequest;
-import com.studentscheduleapp.identityservice.domain.models.JwtResponse;
+import com.studentscheduleapp.identityservice.models.JwtLoginRequest;
+import com.studentscheduleapp.identityservice.models.JwtResponse;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

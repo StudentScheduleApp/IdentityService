@@ -1,13 +1,10 @@
 package com.studentscheduleapp.identityservice.services;
 
-import com.studentscheduleapp.identityservice.domain.models.SendMailRequest;
-import com.studentscheduleapp.identityservice.domain.models.VerifyEmailRequest;
+import com.studentscheduleapp.identityservice.models.SendMailRequest;
+import com.studentscheduleapp.identityservice.models.VerifyEmailRequest;
 import com.studentscheduleapp.identityservice.repos.MailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;

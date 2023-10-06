@@ -1,7 +1,7 @@
 package com.studentscheduleapp.identityservice.security;
 
 
-import com.studentscheduleapp.identityservice.domain.models.User;
+import com.studentscheduleapp.identityservice.models.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

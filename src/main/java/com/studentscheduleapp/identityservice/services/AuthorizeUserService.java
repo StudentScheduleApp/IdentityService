@@ -1,6 +1,6 @@
 package com.studentscheduleapp.identityservice.services;
 
-import com.studentscheduleapp.identityservice.domain.models.AuthorizeEntity;
+import com.studentscheduleapp.identityservice.models.AuthorizeEntity;
 import org.springframework.stereotype.Service;
 
 @Service
