@@ -1,4 +1,4 @@
-package com.studentscheduleapp.identityservice.security.models;
+package com.studentscheduleapp.identityservice.domain.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

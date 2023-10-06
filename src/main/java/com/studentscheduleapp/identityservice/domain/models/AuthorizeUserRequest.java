@@ -1,4 +1,4 @@
-package com.studentscheduleapp.identityservice.api.models;
+package com.studentscheduleapp.identityservice.domain.models;
 
 import com.studentscheduleapp.identityservice.domain.models.AuthorizeEntity;
 import lombok.AllArgsConstructor;

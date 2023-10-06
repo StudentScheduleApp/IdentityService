@@ -1,15 +1,15 @@
 package com.studentscheduleapp.identityservice.api;
 
-import com.studentscheduleapp.identityservice.api.models.AuthorizeServiceRequest;
-import com.studentscheduleapp.identityservice.api.models.AuthorizeUserRequest;
-import com.studentscheduleapp.identityservice.api.models.VerifyEmailRequest;
+import com.studentscheduleapp.identityservice.domain.models.AuthorizeServiceRequest;
+import com.studentscheduleapp.identityservice.domain.models.AuthorizeUserRequest;
+import com.studentscheduleapp.identityservice.domain.models.VerifyEmailRequest;
 import com.studentscheduleapp.identityservice.domain.models.AuthorizeEntity;
 import com.studentscheduleapp.identityservice.domain.models.Role;
 import com.studentscheduleapp.identityservice.domain.models.User;
-import com.studentscheduleapp.identityservice.security.models.JwtLoginRequest;
-import com.studentscheduleapp.identityservice.security.models.JwtRegisterRequest;
-import com.studentscheduleapp.identityservice.security.models.JwtResponse;
-import com.studentscheduleapp.identityservice.security.models.RefreshJwtRequest;
+import com.studentscheduleapp.identityservice.domain.models.JwtLoginRequest;
+import com.studentscheduleapp.identityservice.domain.models.JwtRegisterRequest;
+import com.studentscheduleapp.identityservice.domain.models.JwtResponse;
+import com.studentscheduleapp.identityservice.domain.models.RefreshJwtRequest;
 import com.studentscheduleapp.identityservice.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,6 @@ import javax.security.auth.message.AuthException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("api/")
