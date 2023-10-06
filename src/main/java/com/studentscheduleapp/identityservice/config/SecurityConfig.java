@@ -34,7 +34,6 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .antMatchers("/api/login", "/api/register", "/api/verify").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(serviceTokenFilter, BasicAuthenticationFilter.class)
