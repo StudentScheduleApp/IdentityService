@@ -1,6 +1,6 @@
 package com.studentscheduleapp.identityservice.repos;
 
-import com.studentscheduleapp.identityservice.models.SendMailRequest;
+import com.studentscheduleapp.identityservice.models.api.SendMailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

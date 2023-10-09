@@ -1,4 +1,4 @@
-package com.studentscheduleapp.identityservice.models;
+package com.studentscheduleapp.identityservice.models.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,8 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtLoginRequest {
+public class RefreshJwtRequest {
 
-    private String email;
-    private String password;
+    public String refreshToken;
 
 }

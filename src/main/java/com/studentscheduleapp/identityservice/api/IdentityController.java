@@ -1,15 +1,15 @@
 package com.studentscheduleapp.identityservice.api;
 
-import com.studentscheduleapp.identityservice.models.AuthorizeServiceRequest;
-import com.studentscheduleapp.identityservice.models.AuthorizeUserRequest;
-import com.studentscheduleapp.identityservice.models.VerifyEmailRequest;
-import com.studentscheduleapp.identityservice.models.AuthorizeEntity;
+import com.studentscheduleapp.identityservice.models.api.AuthorizeServiceRequest;
+import com.studentscheduleapp.identityservice.models.api.AuthorizeUserRequest;
+import com.studentscheduleapp.identityservice.models.api.VerifyEmailRequest;
+import com.studentscheduleapp.identityservice.models.api.AuthorizeEntity;
 import com.studentscheduleapp.identityservice.models.Role;
 import com.studentscheduleapp.identityservice.models.User;
-import com.studentscheduleapp.identityservice.models.JwtLoginRequest;
-import com.studentscheduleapp.identityservice.models.JwtRegisterRequest;
-import com.studentscheduleapp.identityservice.models.JwtResponse;
-import com.studentscheduleapp.identityservice.models.RefreshJwtRequest;
+import com.studentscheduleapp.identityservice.models.api.JwtLoginRequest;
+import com.studentscheduleapp.identityservice.models.api.JwtRegisterRequest;
+import com.studentscheduleapp.identityservice.models.api.JwtResponse;
+import com.studentscheduleapp.identityservice.models.api.RefreshJwtRequest;
 import com.studentscheduleapp.identityservice.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

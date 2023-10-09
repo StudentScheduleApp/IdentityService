@@ -1,7 +1,7 @@
 package com.studentscheduleapp.identityservice.services;
 
-import com.studentscheduleapp.identityservice.models.SendMailRequest;
-import com.studentscheduleapp.identityservice.models.VerifyEmailRequest;
+import com.studentscheduleapp.identityservice.models.api.SendMailRequest;
+import com.studentscheduleapp.identityservice.models.api.VerifyEmailRequest;
 import com.studentscheduleapp.identityservice.repos.MailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
