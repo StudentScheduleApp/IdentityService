@@ -24,9 +24,7 @@ public class UserRepository {
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
-        if(r.getStatusCode().isError())
-            throw new Exception("request to " + userService + " return code " + r.getStatusCode());
-        return null;
+        throw new Exception("request to " + userService + " return code " + r.getStatusCode());
     }
     public User getById(long id) throws Exception {
         ResponseEntity<User> r = restTemplate.getForEntity(userService + "/api/user/" + id, User.class);
@@ -34,16 +32,14 @@ public class UserRepository {
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
-        if(r.getStatusCode().isError())
-            throw new Exception("request to " + userService + " return code " + r.getStatusCode());
-        return null;
+        throw new Exception("request to " + userService + " return code " + r.getStatusCode());
     }
     public User create(User user) throws Exception {
         ResponseEntity<User> r = restTemplate.postForEntity(userService + "/api/user/create", user, User.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
-        if(r.getStatusCode().isError())
-            throw new Exception("request to " + userService + " return code " + r.getStatusCode());
-        return null;
+        if (r.getStatusCode().equals(HttpStatus.CONFLICT))
+            return null;
+        throw new Exception("request to " + userService + " return code " + r.getStatusCode());
     }
 }

@@ -25,8 +25,6 @@ public class MailRepository {
             return true;
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return false;
-        if(r.getStatusCode().isError())
-            throw new Exception("request to " + mailService + " return code " + r.getStatusCode());
-        return false;
+        throw new Exception("request to " + mailService + " return code " + r.getStatusCode());
     }
 }

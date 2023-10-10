@@ -113,7 +113,8 @@ public class IdentityController {
             if(verifyEmailService.verify(verifyEmailRequest)){
                 User u = verifyUserCache.get(verifyEmailRequest.getEmail());
                 try {
-                    u = userService.create(u);
+                    if (userService.create(u) == null)
+                        return ResponseEntity.status(HttpStatus.CONFLICT).build();
                 } catch (Exception e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
