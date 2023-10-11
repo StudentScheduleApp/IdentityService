@@ -134,7 +134,7 @@ public class IdentityController {
     }
 
     @PostMapping("user/authorize")
-    public ResponseEntity<Boolean> authorize(@RequestBody AuthorizeUserRequest authorizeUserRequest){
+    public ResponseEntity<Boolean> authorizeUser(@RequestBody AuthorizeUserRequest authorizeUserRequest){
         for(AuthorizeEntity a : authorizeUserRequest.getAuthorizeEntities()){
             if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), a))
                 return ResponseEntity.ok(false);
@@ -142,7 +142,7 @@ public class IdentityController {
         return ResponseEntity.ok(true);
     }
     @PostMapping("service/authorize")
-    public ResponseEntity<Boolean> authorizeApp(@RequestBody AuthorizeServiceRequest authorizeServiceRequest){
+    public ResponseEntity<Boolean> authorizeService(@RequestBody AuthorizeServiceRequest authorizeServiceRequest){
         return ResponseEntity.ok(authorizeServiceService.authorize(authorizeServiceRequest.getServiceToken()));
     }
 
