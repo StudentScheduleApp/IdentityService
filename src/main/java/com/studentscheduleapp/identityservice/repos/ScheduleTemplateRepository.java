@@ -1,7 +1,7 @@
 package com.studentscheduleapp.identityservice.repos;
 
-import com.studentscheduleapp.identityservice.models.Group;
-import com.studentscheduleapp.identityservice.models.User;
+import com.studentscheduleapp.identityservice.models.OutlineMedia;
+import com.studentscheduleapp.identityservice.models.ScheduleTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Repository
-public class GroupRepository {
+public class ScheduleTemplateRepository {
 
 
 
@@ -20,16 +22,24 @@ public class GroupRepository {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Group getById(long id) throws Exception {
-        ResponseEntity<Group> r = restTemplate.getForEntity(databaseService + "/api/groups/id/" + id, Group.class);
+    public ScheduleTemplate getById(long id) throws Exception {
+        ResponseEntity<ScheduleTemplate> r = restTemplate.getForEntity(databaseService + "/api/scheduleTemplate/id/" + id, ScheduleTemplate.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
-    public Group save(Group group) throws Exception {
-        ResponseEntity<Group> r = restTemplate.postForEntity(databaseService + "/api/groups/save", group, Group.class);
+    public List<ScheduleTemplate> getByGroupId(long id) throws Exception {
+        ResponseEntity<List> r = restTemplate.getForEntity(databaseService + "/api/scheduleTemplate/group/" + id, List.class);
+        if(r.getStatusCode().is2xxSuccessful())
+            return r.getBody();
+        if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
+            return null;
+        throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
+    }
+    public ScheduleTemplate save(ScheduleTemplate customLesson) throws Exception {
+        ResponseEntity<ScheduleTemplate> r = restTemplate.postForEntity(databaseService + "/api/scheduleTemplate/save", customLesson, ScheduleTemplate.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if (r.getStatusCode().equals(HttpStatus.CONFLICT))
@@ -37,7 +47,7 @@ public class GroupRepository {
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
     public boolean delete(long id) throws Exception {
-        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/groups/delete/" + id, Void.class);
+        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/scheduleTemplate/delete/" + id, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());

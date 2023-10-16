@@ -1,7 +1,7 @@
 package com.studentscheduleapp.identityservice.repos;
 
 import com.studentscheduleapp.identityservice.models.CustomLesson;
-import com.studentscheduleapp.identityservice.models.Group;
+import com.studentscheduleapp.identityservice.models.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Repository
-public class CustomLessonRepository {
+public class MemberRepository {
 
 
 
@@ -22,24 +22,32 @@ public class CustomLessonRepository {
     @Autowired
     private RestTemplate restTemplate;
 
-    public CustomLesson getById(long id) throws Exception {
-        ResponseEntity<CustomLesson> r = restTemplate.getForEntity(databaseService + "/api/customLessons/id/" + id, CustomLesson.class);
+    public Member getById(long id) throws Exception {
+        ResponseEntity<Member> r = restTemplate.getForEntity(databaseService + "/api/members/id/" + id, Member.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
-    public List<CustomLesson> getByGroupId(long id) throws Exception {
-        ResponseEntity<List> r = restTemplate.getForEntity(databaseService + "/api/customLessons/group/" + id, List.class);
+    public List<Member> getByGroupId(long id) throws Exception {
+        ResponseEntity<List> r = restTemplate.getForEntity(databaseService + "/api/members/group/" + id, List.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
-    public CustomLesson save(CustomLesson customLesson) throws Exception {
-        ResponseEntity<CustomLesson> r = restTemplate.postForEntity(databaseService + "/api/customLessons/save", customLesson, CustomLesson.class);
+    public List<Member> getByUserId(long id) throws Exception {
+        ResponseEntity<List> r = restTemplate.getForEntity(databaseService + "/api/members/user/" + id, List.class);
+        if(r.getStatusCode().is2xxSuccessful())
+            return r.getBody();
+        if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
+            return null;
+        throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
+    }
+    public Member save(Member member) throws Exception {
+        ResponseEntity<Member> r = restTemplate.postForEntity(databaseService + "/api/members/save", member, Member.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if (r.getStatusCode().equals(HttpStatus.CONFLICT))
@@ -47,7 +55,7 @@ public class CustomLessonRepository {
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
     public boolean delete(long id) throws Exception {
-        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/customLessons/delete/" + id, Void.class);
+        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/members/delete/" + id, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
