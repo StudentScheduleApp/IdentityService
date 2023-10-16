@@ -1,5 +1,6 @@
 package com.studentscheduleapp.identityservice.repos;
 
+import com.studentscheduleapp.identityservice.models.Group;
 import com.studentscheduleapp.identityservice.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
-public class UserRepository {
+public class GroupRepository {
 
 
 
@@ -19,24 +20,16 @@ public class UserRepository {
     @Autowired
     private RestTemplate restTemplate;
 
-    public User getById(long id) throws Exception {
-        ResponseEntity<User> r = restTemplate.getForEntity(databaseService + "/api/users/id/" + id, User.class);
+    public Group getById(long id) throws Exception {
+        ResponseEntity<Group> r = restTemplate.getForEntity(databaseService + "/api/groups/id/" + id, Group.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
-    public User getByEmail(String email) throws Exception {
-        ResponseEntity<User> r = restTemplate.getForEntity(databaseService + "/api/users/email/" + email, User.class);
-        if(r.getStatusCode().is2xxSuccessful())
-            return r.getBody();
-        if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
-            return null;
-        throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
-    }
-    public User save(User user) throws Exception {
-        ResponseEntity<User> r = restTemplate.postForEntity(databaseService + "/api/users/save", user, User.class);
+    public Group save(Group user) throws Exception {
+        ResponseEntity<Group> r = restTemplate.postForEntity(databaseService + "/api/groups/save", user, Group.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if (r.getStatusCode().equals(HttpStatus.CONFLICT))
@@ -44,7 +37,7 @@ public class UserRepository {
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
     public boolean delete(long id) throws Exception {
-        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/users/delete/" + id, Void.class);
+        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/groups/delete/" + id, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());

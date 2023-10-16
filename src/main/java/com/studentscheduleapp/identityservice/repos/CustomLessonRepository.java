@@ -1,6 +1,7 @@
 package com.studentscheduleapp.identityservice.repos;
 
-import com.studentscheduleapp.identityservice.models.User;
+import com.studentscheduleapp.identityservice.models.CustomLesson;
+import com.studentscheduleapp.identityservice.models.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -8,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Repository
-public class UserRepository {
+public class CustomLessonRepository {
 
 
 
@@ -19,24 +22,24 @@ public class UserRepository {
     @Autowired
     private RestTemplate restTemplate;
 
-    public User getById(long id) throws Exception {
-        ResponseEntity<User> r = restTemplate.getForEntity(databaseService + "/api/users/id/" + id, User.class);
+    public CustomLesson getById(long id) throws Exception {
+        ResponseEntity<CustomLesson> r = restTemplate.getForEntity(databaseService + "/api/customLesson/id/" + id, CustomLesson.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
-    public User getByEmail(String email) throws Exception {
-        ResponseEntity<User> r = restTemplate.getForEntity(databaseService + "/api/users/email/" + email, User.class);
+    public List<CustomLesson> getByGroupId(long id) throws Exception {
+        ResponseEntity<List> r = restTemplate.getForEntity(databaseService + "/api/customLesson/group/" + id, List.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
-    public User save(User user) throws Exception {
-        ResponseEntity<User> r = restTemplate.postForEntity(databaseService + "/api/users/save", user, User.class);
+    public CustomLesson save(CustomLesson user) throws Exception {
+        ResponseEntity<CustomLesson> r = restTemplate.postForEntity(databaseService + "/api/customLesson/save", user, CustomLesson.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if (r.getStatusCode().equals(HttpStatus.CONFLICT))
@@ -44,7 +47,7 @@ public class UserRepository {
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
     public boolean delete(long id) throws Exception {
-        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/users/delete/" + id, Void.class);
+        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/customLesson/delete/" + id, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());

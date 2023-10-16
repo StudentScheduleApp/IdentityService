@@ -19,7 +19,7 @@ public class UserService {
         return userRepository.getById(id);
     }
     public User create(User user) throws Exception {
-        return userRepository.create(user);
+        return userRepository.save(user);
     }
 
 }
