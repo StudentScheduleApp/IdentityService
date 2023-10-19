@@ -47,10 +47,10 @@ public class UserTokenService {
                 if(user == null)
                     throw new AuthException();
                 final String accessToken = jwtProvider.generateAccessToken(user);
-                return new JwtResponse(accessToken, null);
+                return new JwtResponse(user.getId(), accessToken, null);
             }
         }
-        return new JwtResponse(null, null);
+        return new JwtResponse(0, null, null);
     }
 
     public JwtResponse refresh(@NonNull String refreshToken) throws Exception {
@@ -65,7 +65,7 @@ public class UserTokenService {
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getEmail(), newRefreshToken);
-                return new JwtResponse(accessToken, newRefreshToken);
+                return new JwtResponse(user.getId(), accessToken, newRefreshToken);
             }
         }
         throw new AuthException();
