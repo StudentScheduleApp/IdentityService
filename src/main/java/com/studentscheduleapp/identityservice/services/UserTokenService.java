@@ -31,7 +31,7 @@ public class UserTokenService {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getEmail(), refreshToken);
-            return new JwtResponse(accessToken, refreshToken);
+            return new JwtResponse(user.getId(), accessToken, refreshToken);
         } else {
             throw new AuthException();
         }
