@@ -14,5 +14,6 @@ public class Group {
     private long chatId;
     private long avaUrl;
     private String name;
+    private String driveEmail;
 
 }
