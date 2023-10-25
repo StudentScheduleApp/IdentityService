@@ -306,6 +306,23 @@ public class AuthorizeUserService {
                         }
                         break;
                     case SPECIFIC_LESSON:
+                        if (authorizeEntity.getType().equals(AuthorizeType.PATCH)){
+                            ArrayList<Long> gggids = new ArrayList<>();
+                            for (Long l : authorizeEntity.getIds()) {
+                                ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
+                                if (!gggids.contains(cl.getGroupId()))
+                                    gggids.add(cl.getGroupId());
+                            }
+                            for (Long l : gggids) {
+                                boolean fl = false;
+                                for (Member m : memberRepository.getByGroupId(l)) {
+                                    if (m.getUserId() == u.getId() && m.getRoles().contains(MemberRole.ADMIN))
+                                        fl = true;
+                                }
+                                if (!fl)
+                                    return false;
+                            }
+                        }
                         return false;
                      //   break;
                     case SCHEDULE_TEMPLATE:
@@ -349,24 +366,12 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE:
-                        if (u.getRoles().contains(Role.ADMIN))
-                            return true;
-                        ArrayList<Long> slids = new ArrayList<>();
                         for (Long l : authorizeEntity.getIds()) {
                             Outline cl = outlineRepository.getById(l);
-                            if (!slids.contains(cl.getSpecificLessonId()))
-                                slids.add(cl.getSpecificLessonId());
-                        }
-                        ArrayList<Long> gggggids = new ArrayList<>();
-                        for (Long l : slids) {
-                            SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!gggggids.contains(cl.getGroupId()))
-                                gggggids.add(cl.getGroupId());
-                        }
-                        for (Long l : gggggids) {
+                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
+                                if (m.getUserId() == u.getId() && cl.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
@@ -374,30 +379,13 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE_MEDIA:
-                        if (u.getRoles().contains(Role.ADMIN))
-                            return true;
-                        ArrayList<Long> oids = new ArrayList<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            OutlineMedia cl = outlineMediaRepository.getById(l);
-                            if (!oids.contains(cl.getOutlineId()))
-                                oids.add(cl.getOutlineId());
-                        }
-                        ArrayList<Long> sllids = new ArrayList<>();
-                        for (Long l : oids) {
-                            Outline cl = outlineRepository.getById(l);
-                            if (!sllids.contains(cl.getSpecificLessonId()))
-                                sllids.add(cl.getSpecificLessonId());
-                        }
-                        ArrayList<Long> ggggggids = new ArrayList<>();
-                        for (Long l : sllids) {
-                            SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!ggggggids.contains(cl.getGroupId()))
-                                ggggggids.add(cl.getGroupId());
-                        }
-                        for (Long l : ggggggids) {
+                            OutlineMedia om = outlineMediaRepository.getById(l);
+                            Outline cl = outlineRepository.getById(om.getOutlineId());
+                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
+                                if (m.getUserId() == u.getId() && cl.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
@@ -405,34 +393,14 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE_MEDIA_COMMENT:
-                        ArrayList<Long> ocids = new ArrayList<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            OutlineMediaComment cl = outlineMediaCommentRepository.getById(l);
-                            if (!ocids.contains(cl.getMediaId()))
-                                ocids.add(cl.getMediaId());
-                        }
-                        ArrayList<Long> ooids = new ArrayList<>();
-                        for (Long l : ocids) {
-                            OutlineMedia cl = outlineMediaRepository.getById(l);
-                            if (!ooids.contains(cl.getOutlineId()))
-                                ooids.add(cl.getOutlineId());
-                        }
-                        ArrayList<Long> ssllids = new ArrayList<>();
-                        for (Long l : ooids) {
-                            Outline cl = outlineRepository.getById(l);
-                            if (!ssllids.contains(cl.getSpecificLessonId()))
-                                ssllids.add(cl.getSpecificLessonId());
-                        }
-                        ArrayList<Long> gggggggids = new ArrayList<>();
-                        for (Long l : ssllids) {
-                            SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!gggggggids.contains(cl.getGroupId()))
-                                gggggggids.add(cl.getGroupId());
-                        }
-                        for (Long l : gggggggids) {
+                            OutlineMediaComment omc = outlineMediaCommentRepository.getById(l);
+                            OutlineMedia om = outlineMediaRepository.getById(omc.getMediaId());
+                            Outline cl = outlineRepository.getById(om.getOutlineId());
+                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
+                                if (m.getUserId() == u.getId() && cl.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
@@ -548,24 +516,12 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE:
-                        if (u.getRoles().contains(Role.ADMIN))
-                            return true;
-                        ArrayList<Long> slids = new ArrayList<>();
                         for (Long l : authorizeEntity.getIds()) {
                             Outline cl = outlineRepository.getById(l);
-                            if (!slids.contains(cl.getSpecificLessonId()))
-                                slids.add(cl.getSpecificLessonId());
-                        }
-                        ArrayList<Long> gggggids = new ArrayList<>();
-                        for (Long l : slids) {
-                            SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!gggggids.contains(cl.getGroupId()))
-                                gggggids.add(cl.getGroupId());
-                        }
-                        for (Long l : gggggids) {
+                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
+                                if (m.getUserId() == u.getId() && (cl.getUserId() == u.getId() || m.getRoles().contains(MemberRole.ADMIN)))
                                     fl = true;
                             }
                             if (!fl)
@@ -573,30 +529,13 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE_MEDIA:
-                        if (u.getRoles().contains(Role.ADMIN))
-                            return true;
-                        ArrayList<Long> oids = new ArrayList<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            OutlineMedia cl = outlineMediaRepository.getById(l);
-                            if (!oids.contains(cl.getOutlineId()))
-                                oids.add(cl.getOutlineId());
-                        }
-                        ArrayList<Long> sllids = new ArrayList<>();
-                        for (Long l : oids) {
-                            Outline cl = outlineRepository.getById(l);
-                            if (!sllids.contains(cl.getSpecificLessonId()))
-                                sllids.add(cl.getSpecificLessonId());
-                        }
-                        ArrayList<Long> ggggggids = new ArrayList<>();
-                        for (Long l : sllids) {
-                            SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!ggggggids.contains(cl.getGroupId()))
-                                ggggggids.add(cl.getGroupId());
-                        }
-                        for (Long l : ggggggids) {
+                            OutlineMedia om = outlineMediaRepository.getById(l);
+                            Outline cl = outlineRepository.getById(om.getOutlineId());
+                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
+                                if (m.getUserId() == u.getId() && (cl.getUserId() == u.getId() || m.getRoles().contains(MemberRole.ADMIN)))
                                     fl = true;
                             }
                             if (!fl)
@@ -604,34 +543,14 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE_MEDIA_COMMENT:
-                        ArrayList<Long> ocids = new ArrayList<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            OutlineMediaComment cl = outlineMediaCommentRepository.getById(l);
-                            if (!ocids.contains(cl.getMediaId()))
-                                ocids.add(cl.getMediaId());
-                        }
-                        ArrayList<Long> ooids = new ArrayList<>();
-                        for (Long l : ocids) {
-                            OutlineMedia cl = outlineMediaRepository.getById(l);
-                            if (!ooids.contains(cl.getOutlineId()))
-                                ooids.add(cl.getOutlineId());
-                        }
-                        ArrayList<Long> ssllids = new ArrayList<>();
-                        for (Long l : ooids) {
-                            Outline cl = outlineRepository.getById(l);
-                            if (!ssllids.contains(cl.getSpecificLessonId()))
-                                ssllids.add(cl.getSpecificLessonId());
-                        }
-                        ArrayList<Long> gggggggids = new ArrayList<>();
-                        for (Long l : ssllids) {
-                            SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!gggggggids.contains(cl.getGroupId()))
-                                gggggggids.add(cl.getGroupId());
-                        }
-                        for (Long l : gggggggids) {
+                            OutlineMediaComment omc = outlineMediaCommentRepository.getById(l);
+                            OutlineMedia om = outlineMediaRepository.getById(omc.getMediaId());
+                            Outline cl = outlineRepository.getById(om.getOutlineId());
+                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
+                                if (m.getUserId() == u.getId() && (cl.getUserId() == u.getId() || m.getRoles().contains(MemberRole.ADMIN)))
                                     fl = true;
                             }
                             if (!fl)
