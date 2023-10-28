@@ -255,8 +255,6 @@ public class AuthorizeUserService {
                                 return false;
                         }
                         break;
-                    case IMAGE:
-                        return true;
                 }
                 return false;
             }
@@ -407,23 +405,6 @@ public class AuthorizeUserService {
                                 return false;
                         }
                         break;
-                    case IMAGE:
-                        ArrayList<Long> ggghids = new ArrayList<>();
-                        for (Long l : authorizeEntity.getIds()) {
-                            ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
-                            if (!ggghids.contains(cl.getGroupId()))
-                                ggghids.add(cl.getGroupId());
-                        }
-                        for (Long l : ggghids) {
-                            boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId())
-                                    fl = true;
-                            }
-                            if (!fl)
-                                return false;
-                        }
-                        return true;
                 }
                 return false;
             }
@@ -557,22 +538,6 @@ public class AuthorizeUserService {
                                 return false;
                         }
                         break;
-                    case IMAGE:
-                        ArrayList<Long> ggghids = new ArrayList<>();
-                        for (Long l : authorizeEntity.getIds()) {
-                            OutlineMedia cl = outlineMediaRepository.getById(l);
-                            boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(specificLessonRepository.getById(outlineRepository.getById(cl.getOutlineId()).getSpecificLessonId()).getGroupId())) {
-                                if (m.getUserId() == u.getId()){
-                                    if (m.getRoles().contains(MemberRole.ADMIN) || u.getId() == outlineRepository.getById(cl.getOutlineId()).getUserId()) {
-                                        fl = true;
-                                    }
-                                }
-                            }
-                            if (!fl)
-                                return false;
-                        }
-                        return true;
                 }
                 return false;
             }
