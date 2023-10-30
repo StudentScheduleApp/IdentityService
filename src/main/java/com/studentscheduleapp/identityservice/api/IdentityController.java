@@ -135,10 +135,8 @@ public class IdentityController {
 
     @PostMapping("user/authorize")
     public ResponseEntity<Boolean> authorizeUser(@RequestBody AuthorizeUserRequest authorizeUserRequest){
-        for(AuthorizeEntity a : authorizeUserRequest.getAuthorizeEntities()){
-            if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), a))
-                return ResponseEntity.ok(false);
-        }
+        if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), authorizeUserRequest.getAuthorizeEntity()))
+            return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
     }
     @PostMapping("service/authorize")
