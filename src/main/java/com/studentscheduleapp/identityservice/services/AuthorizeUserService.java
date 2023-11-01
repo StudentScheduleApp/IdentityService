@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class AuthorizeUserService {
@@ -43,9 +45,7 @@ public class AuthorizeUserService {
             if (authorizeEntity.getType().equals(AuthorizeType.GET)) {
                 switch (authorizeEntity.getEntity()) {
                     case USER:
-                        if (authorizeEntity.getIds().size() == 1 && authorizeEntity.getIds().get(0) == u.getId() && (authorizeEntity.getParams().contains("email") || authorizeEntity.getParams().contains("password")))
-                            return false;
-                        if (authorizeEntity.getParams().contains("email") || authorizeEntity.getParams().contains("password"))
+                        if (!(authorizeEntity.getIds().size() == 1 && authorizeEntity.getIds().get(0) == u.getId() && (authorizeEntity.getParams().contains("email") || authorizeEntity.getParams().contains("password"))))
                             return false;
                         break;
                     case GROUP:
@@ -64,11 +64,10 @@ public class AuthorizeUserService {
                     case CUSTOM_LESSON:
                         if (u.getRoles().contains(Role.ADMIN))
                             return true;
-                        ArrayList<Long> ids = new ArrayList<>();
+                        Set<Long> ids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             CustomLesson cl = customLessonRepository.getById(l);
-                            if (!ids.contains(cl.getGroupId()))
-                                ids.add(cl.getGroupId());
+                            ids.add(cl.getGroupId());
                         }
                         for (Long l : ids) {
                             boolean fl = false;
@@ -83,11 +82,10 @@ public class AuthorizeUserService {
                     case MEMBER:
                         if (u.getRoles().contains(Role.ADMIN))
                             return true;
-                        ArrayList<Long> gids = new ArrayList<>();
+                        Set<Long> gids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             Member cl = memberRepository.getById(l);
-                            if (!gids.contains(cl.getGroupId()))
-                                gids.add(cl.getGroupId());
+                            gids.add(cl.getGroupId());
                         }
                         for (Long l : gids) {
                             boolean fl = false;
@@ -102,11 +100,10 @@ public class AuthorizeUserService {
                     case SPECIFIC_LESSON:
                         if (u.getRoles().contains(Role.ADMIN))
                             return true;
-                        ArrayList<Long> ggids = new ArrayList<>();
+                        Set<Long> ggids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!ggids.contains(cl.getGroupId()))
-                                ggids.add(cl.getGroupId());
+                            ggids.add(cl.getGroupId());
                         }
                         for (Long l : ggids) {
                             boolean fl = false;
@@ -121,11 +118,10 @@ public class AuthorizeUserService {
                     case SCHEDULE_TEMPLATE:
                         if (u.getRoles().contains(Role.ADMIN))
                             return true;
-                        ArrayList<Long> gggids = new ArrayList<>();
+                        Set<Long> gggids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
-                            if (!gggids.contains(cl.getGroupId()))
-                                gggids.add(cl.getGroupId());
+                            gggids.add(cl.getGroupId());
                         }
                         for (Long l : gggids) {
                             boolean fl = false;
@@ -140,17 +136,15 @@ public class AuthorizeUserService {
                     case LESSON_TEMPLATE:
                         if (u.getRoles().contains(Role.ADMIN))
                             return true;
-                        ArrayList<Long> sids = new ArrayList<>();
+                        Set<Long> sids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             LessonTemplate cl = lessonTemplateRepository.getById(l);
-                            if (!sids.contains(cl.getScheduleTemplateId()))
-                                sids.add(cl.getScheduleTemplateId());
+                            sids.add(cl.getScheduleTemplateId());
                         }
-                        ArrayList<Long> ggggids = new ArrayList<>();
+                        Set<Long> ggggids = new HashSet<>();
                         for (Long l : sids) {
                             ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
-                            if (!ggggids.contains(cl.getGroupId()))
-                                ggggids.add(cl.getGroupId());
+                            ggggids.add(cl.getGroupId());
                         }
                         for (Long l : ggggids) {
                             boolean fl = false;
@@ -165,17 +159,15 @@ public class AuthorizeUserService {
                     case OUTLINE:
                         if (u.getRoles().contains(Role.ADMIN))
                             return true;
-                        ArrayList<Long> slids = new ArrayList<>();
+                        Set<Long> slids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             Outline cl = outlineRepository.getById(l);
-                            if (!slids.contains(cl.getSpecificLessonId()))
-                                slids.add(cl.getSpecificLessonId());
+                            slids.add(cl.getSpecificLessonId());
                         }
-                        ArrayList<Long> gggggids = new ArrayList<>();
+                        Set<Long> gggggids = new HashSet<>();
                         for (Long l : slids) {
                             SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!gggggids.contains(cl.getGroupId()))
-                                gggggids.add(cl.getGroupId());
+                            gggggids.add(cl.getGroupId());
                         }
                         for (Long l : gggggids) {
                             boolean fl = false;
@@ -190,23 +182,20 @@ public class AuthorizeUserService {
                     case OUTLINE_MEDIA:
                         if (u.getRoles().contains(Role.ADMIN))
                             return true;
-                        ArrayList<Long> oids = new ArrayList<>();
+                        Set<Long> oids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             OutlineMedia cl = outlineMediaRepository.getById(l);
-                            if (!oids.contains(cl.getOutlineId()))
-                                oids.add(cl.getOutlineId());
+                            oids.add(cl.getOutlineId());
                         }
-                        ArrayList<Long> sllids = new ArrayList<>();
+                        Set<Long> sllids = new HashSet<>();
                         for (Long l : oids) {
                             Outline cl = outlineRepository.getById(l);
-                            if (!sllids.contains(cl.getSpecificLessonId()))
-                                sllids.add(cl.getSpecificLessonId());
+                            sllids.add(cl.getSpecificLessonId());
                         }
-                        ArrayList<Long> ggggggids = new ArrayList<>();
+                        Set<Long> ggggggids = new HashSet<>();
                         for (Long l : sllids) {
                             SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!ggggggids.contains(cl.getGroupId()))
-                                ggggggids.add(cl.getGroupId());
+                            ggggggids.add(cl.getGroupId());
                         }
                         for (Long l : ggggggids) {
                             boolean fl = false;
@@ -221,29 +210,25 @@ public class AuthorizeUserService {
                     case OUTLINE_MEDIA_COMMENT:
                         if (u.getRoles().contains(Role.ADMIN))
                             return true;
-                        ArrayList<Long> ocids = new ArrayList<>();
+                        Set<Long> ocids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             OutlineMediaComment cl = outlineMediaCommentRepository.getById(l);
-                            if (!ocids.contains(cl.getMediaId()))
-                                ocids.add(cl.getMediaId());
+                            ocids.add(cl.getMediaId());
                         }
-                        ArrayList<Long> ooids = new ArrayList<>();
+                        Set<Long> ooids = new HashSet<>();
                         for (Long l : ocids) {
                             OutlineMedia cl = outlineMediaRepository.getById(l);
-                            if (!ooids.contains(cl.getOutlineId()))
-                                ooids.add(cl.getOutlineId());
+                            ooids.add(cl.getOutlineId());
                         }
-                        ArrayList<Long> ssllids = new ArrayList<>();
+                        Set<Long> ssllids = new HashSet<>();
                         for (Long l : ooids) {
                             Outline cl = outlineRepository.getById(l);
-                            if (!ssllids.contains(cl.getSpecificLessonId()))
-                                ssllids.add(cl.getSpecificLessonId());
+                            ssllids.add(cl.getSpecificLessonId());
                         }
-                        ArrayList<Long> gggggggids = new ArrayList<>();
+                        Set<Long> gggggggids = new HashSet<>();
                         for (Long l : ssllids) {
                             SpecificLesson cl = specificLessonRepository.getById(l);
-                            if (!gggggggids.contains(cl.getGroupId()))
-                                gggggggids.add(cl.getGroupId());
+                            gggggggids.add(cl.getGroupId());
                         }
                         for (Long l : gggggggids) {
                             boolean fl = false;
@@ -258,79 +243,17 @@ public class AuthorizeUserService {
                 }
                 return false;
             }
-            if (authorizeEntity.getType().equals(AuthorizeType.CREATE) || authorizeEntity.getType().equals(AuthorizeType.PATCH)){
+            if (authorizeEntity.getType().equals(AuthorizeType.CREATE)){
                 switch (authorizeEntity.getEntity()) {
                     case USER:
+                    case SPECIFIC_LESSON:
                         return false;
-                     //   break;
                     case GROUP:
                         return true;
-                     //   break;
                     case CUSTOM_LESSON:
-                        ArrayList<Long> ids = new ArrayList<>();
-                        for (Long l : authorizeEntity.getIds()) {
-                            CustomLesson cl = customLessonRepository.getById(l);
-                            if (!ids.contains(cl.getGroupId()))
-                                ids.add(cl.getGroupId());
-                        }
-                        for (Long l : ids) {
-                            boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId() && m.getRoles().contains(MemberRole.ADMIN))
-                                    fl = true;
-                            }
-                            if (!fl)
-                                return false;
-                        }
-                        break;
-                    case MEMBER:
-                        ArrayList<Long> gids = new ArrayList<>();
-                        for (Long l : authorizeEntity.getIds()) {
-                            Member cl = memberRepository.getById(l);
-                            if (!gids.contains(cl.getGroupId()))
-                                gids.add(cl.getGroupId());
-                        }
-                        for (Long l : gids) {
-                            boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(l)) {
-                                if (m.getUserId() == u.getId() && m.getRoles().contains(MemberRole.ADMIN))
-                                    fl = true;
-                                if (m.getUserId() == u.getId() && authorizeEntity.getIds().contains(m.getId())){
-                                    fl = true;
-                                }
-                            }
-                            if (!fl)
-                                return false;
-                        }
-                        break;
-                    case SPECIFIC_LESSON:
-                        if (authorizeEntity.getType().equals(AuthorizeType.PATCH)){
-                            ArrayList<Long> gggids = new ArrayList<>();
-                            for (Long l : authorizeEntity.getIds()) {
-                                ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
-                                if (!gggids.contains(cl.getGroupId()))
-                                    gggids.add(cl.getGroupId());
-                            }
-                            for (Long l : gggids) {
-                                boolean fl = false;
-                                for (Member m : memberRepository.getByGroupId(l)) {
-                                    if (m.getUserId() == u.getId() && m.getRoles().contains(MemberRole.ADMIN))
-                                        fl = true;
-                                }
-                                if (!fl)
-                                    return false;
-                            }
-                        }
-                        return false;
-                     //   break;
                     case SCHEDULE_TEMPLATE:
-                        ArrayList<Long> gggids = new ArrayList<>();
+                    case MEMBER:
                         for (Long l : authorizeEntity.getIds()) {
-                            ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
-                            if (!gggids.contains(cl.getGroupId()))
-                                gggids.add(cl.getGroupId());
-                        }
-                        for (Long l : gggids) {
                             boolean fl = false;
                             for (Member m : memberRepository.getByGroupId(l)) {
                                 if (m.getUserId() == u.getId() && m.getRoles().contains(MemberRole.ADMIN))
@@ -341,17 +264,10 @@ public class AuthorizeUserService {
                         }
                         break;
                     case LESSON_TEMPLATE:
-                        ArrayList<Long> sids = new ArrayList<>();
+                        Set<Long> ggggids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            LessonTemplate cl = lessonTemplateRepository.getById(l);
-                            if (!sids.contains(cl.getScheduleTemplateId()))
-                                sids.add(cl.getScheduleTemplateId());
-                        }
-                        ArrayList<Long> ggggids = new ArrayList<>();
-                        for (Long l : sids) {
                             ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
-                            if (!ggggids.contains(cl.getGroupId()))
-                                ggggids.add(cl.getGroupId());
+                            ggggids.add(cl.getGroupId());
                         }
                         for (Long l : ggggids) {
                             boolean fl = false;
@@ -364,12 +280,15 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE:
+                        Set<Long> gggids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            Outline cl = outlineRepository.getById(l);
-                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
+                             SpecificLesson sl = specificLessonRepository.getById(l);
+                             gggids.add(sl.getGroupId());
+                        }
+                        for (Long l : gggids) {
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
-                                if (m.getUserId() == u.getId() && cl.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
@@ -377,13 +296,20 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE_MEDIA:
+                        Set<Long> ggggifds = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            OutlineMedia om = outlineMediaRepository.getById(l);
-                            Outline cl = outlineRepository.getById(om.getOutlineId());
-                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
+                            Outline sl = outlineRepository.getById(l);
+                            ggggifds.add(sl.getSpecificLessonId());
+                        }
+                        Set<Long> ggggdifds = new HashSet<>();
+                        for (Long l : ggggifds) {
+                            SpecificLesson sl = specificLessonRepository.getById(l);
+                            ggggdifds.add(sl.getGroupId());
+                        }
+                        for (Long l : ggggdifds) {
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
-                                if (m.getUserId() == u.getId() && cl.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
@@ -391,14 +317,127 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE_MEDIA_COMMENT:
+                        Set<Long> ggggdsifds = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            OutlineMediaComment omc = outlineMediaCommentRepository.getById(l);
-                            OutlineMedia om = outlineMediaRepository.getById(omc.getMediaId());
-                            Outline cl = outlineRepository.getById(om.getOutlineId());
-                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
+                            OutlineMedia sl = outlineMediaRepository.getById(l);
+                            ggggdsifds.add(sl.getOutlineId());
+                        }
+                        Set<Long> ggggsifds = new HashSet<>();
+                        for (Long l : ggggdsifds) {
+                            Outline sl = outlineRepository.getById(l);
+                            ggggsifds.add(sl.getSpecificLessonId());
+                        }
+                        Set<Long> ggggdifdds = new HashSet<>();
+                        for (Long l : ggggsifds) {
+                            SpecificLesson sl = specificLessonRepository.getById(l);
+                            ggggdifdds.add(sl.getGroupId());
+                        }
+                        for (Long l : ggggdifdds) {
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
-                                if (m.getUserId() == u.getId() && cl.getUserId() == u.getId())
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
+                                    fl = true;
+                            }
+                            if (!fl)
+                                return false;
+                        }
+                        break;
+                }
+                return false;
+            }
+            if (authorizeEntity.getType().equals(AuthorizeType.PATCH)){
+                switch (authorizeEntity.getEntity()) {
+                    case USER:
+                    case SPECIFIC_LESSON:
+                        return false;
+                    case GROUP:
+                        return true;
+                    case CUSTOM_LESSON:
+                    case SCHEDULE_TEMPLATE:
+                    case MEMBER:
+                        for (Long l : authorizeEntity.getIds()) {
+                            boolean fl = false;
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId() && m.getRoles().contains(MemberRole.ADMIN))
+                                    fl = true;
+                            }
+                            if (!fl)
+                                return false;
+                        }
+                        break;
+                    case LESSON_TEMPLATE:
+                        Set<Long> ggggids = new HashSet<>();
+                        for (Long l : authorizeEntity.getIds()) {
+                            ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
+                            ggggids.add(cl.getGroupId());
+                        }
+                        for (Long l : ggggids) {
+                            boolean fl = false;
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId() && m.getRoles().contains(MemberRole.ADMIN))
+                                    fl = true;
+                            }
+                            if (!fl)
+                                return false;
+                        }
+                        break;
+                    case OUTLINE:
+                        Set<Long> gggids = new HashSet<>();
+                        for (Long l : authorizeEntity.getIds()) {
+                            SpecificLesson sl = specificLessonRepository.getById(l);
+                            gggids.add(sl.getGroupId());
+                        }
+                        for (Long l : gggids) {
+                            boolean fl = false;
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
+                                    fl = true;
+                            }
+                            if (!fl)
+                                return false;
+                        }
+                        break;
+                    case OUTLINE_MEDIA:
+                        Set<Long> ggggifds = new HashSet<>();
+                        for (Long l : authorizeEntity.getIds()) {
+                            Outline sl = outlineRepository.getById(l);
+                            ggggifds.add(sl.getSpecificLessonId());
+                        }
+                        Set<Long> ggggdifds = new HashSet<>();
+                        for (Long l : ggggifds) {
+                            SpecificLesson sl = specificLessonRepository.getById(l);
+                            ggggdifds.add(sl.getGroupId());
+                        }
+                        for (Long l : ggggdifds) {
+                            boolean fl = false;
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
+                                    fl = true;
+                            }
+                            if (!fl)
+                                return false;
+                        }
+                        break;
+                    case OUTLINE_MEDIA_COMMENT:
+                        Set<Long> ggggdsifds = new HashSet<>();
+                        for (Long l : authorizeEntity.getIds()) {
+                            OutlineMedia sl = outlineMediaRepository.getById(l);
+                            ggggdsifds.add(sl.getOutlineId());
+                        }
+                        Set<Long> ggggsifds = new HashSet<>();
+                        for (Long l : ggggdsifds) {
+                            Outline sl = outlineRepository.getById(l);
+                            ggggsifds.add(sl.getSpecificLessonId());
+                        }
+                        Set<Long> ggggdifdds = new HashSet<>();
+                        for (Long l : ggggsifds) {
+                            SpecificLesson sl = specificLessonRepository.getById(l);
+                            ggggdifdds.add(sl.getGroupId());
+                        }
+                        for (Long l : ggggdifdds) {
+                            boolean fl = false;
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
@@ -411,17 +450,14 @@ public class AuthorizeUserService {
             if (authorizeEntity.getType().equals(AuthorizeType.DELETE)){
                 switch (authorizeEntity.getEntity()) {
                     case USER:
-                        return false;
-                    //   break;
                     case GROUP:
+                    case SPECIFIC_LESSON:
                         return false;
-                    //   break;
                     case CUSTOM_LESSON:
-                        ArrayList<Long> ids = new ArrayList<>();
+                        Set<Long> ids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             CustomLesson cl = customLessonRepository.getById(l);
-                            if (!ids.contains(cl.getGroupId()))
-                                ids.add(cl.getGroupId());
+                            ids.add(cl.getGroupId());
                         }
                         for (Long l : ids) {
                             boolean fl = false;
@@ -434,11 +470,10 @@ public class AuthorizeUserService {
                         }
                         break;
                     case MEMBER:
-                        ArrayList<Long> gids = new ArrayList<>();
+                        Set<Long> gids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             Member cl = memberRepository.getById(l);
-                            if (!gids.contains(cl.getGroupId()))
-                                gids.add(cl.getGroupId());
+                            gids.add(cl.getGroupId());
                         }
                         for (Long l : gids) {
                             boolean fl = false;
@@ -453,15 +488,11 @@ public class AuthorizeUserService {
                                 return false;
                         }
                         break;
-                    case SPECIFIC_LESSON:
-                        return false;
-                    //   break;
                     case SCHEDULE_TEMPLATE:
-                        ArrayList<Long> gggids = new ArrayList<>();
+                        Set<Long> gggids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
-                            if (!gggids.contains(cl.getGroupId()))
-                                gggids.add(cl.getGroupId());
+                            gggids.add(cl.getGroupId());
                         }
                         for (Long l : gggids) {
                             boolean fl = false;
@@ -474,17 +505,15 @@ public class AuthorizeUserService {
                         }
                         break;
                     case LESSON_TEMPLATE:
-                        ArrayList<Long> sids = new ArrayList<>();
+                        Set<Long> sids = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             LessonTemplate cl = lessonTemplateRepository.getById(l);
-                            if (!sids.contains(cl.getScheduleTemplateId()))
-                                sids.add(cl.getScheduleTemplateId());
+                            sids.add(cl.getScheduleTemplateId());
                         }
-                        ArrayList<Long> ggggids = new ArrayList<>();
+                        Set<Long> ggggids = new HashSet<>();
                         for (Long l : sids) {
                             ScheduleTemplate cl = scheduleTemplateRepository.getById(l);
-                            if (!ggggids.contains(cl.getGroupId()))
-                                ggggids.add(cl.getGroupId());
+                            ggggids.add(cl.getGroupId());
                         }
                         for (Long l : ggggids) {
                             boolean fl = false;
@@ -497,12 +526,20 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE:
+                        Set<Long> sidds = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
                             Outline cl = outlineRepository.getById(l);
-                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
+                            sidds.add(cl.getSpecificLessonId());
+                        }
+                        Set<Long> ggghgids = new HashSet<>();
+                        for (Long l : sidds) {
+                            SpecificLesson cl = specificLessonRepository.getById(l);
+                            ggghgids.add(cl.getGroupId());
+                        }
+                        for (Long l : ggghgids) {
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
-                                if (m.getUserId() == u.getId() && (cl.getUserId() == u.getId() || m.getRoles().contains(MemberRole.ADMIN)))
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
@@ -510,13 +547,25 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE_MEDIA:
+                        Set<Long> sidgds = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            OutlineMedia om = outlineMediaRepository.getById(l);
-                            Outline cl = outlineRepository.getById(om.getOutlineId());
-                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
+                            OutlineMedia cl = outlineMediaRepository.getById(l);
+                            sidgds.add(cl.getOutlineId());
+                        }
+                        Set<Long> siddgds = new HashSet<>();
+                        for (Long l : sidgds) {
+                            Outline cl = outlineRepository.getById(l);
+                            siddgds.add(cl.getSpecificLessonId());
+                        }
+                        Set<Long> ggghgdids = new HashSet<>();
+                        for (Long l : siddgds) {
+                            SpecificLesson cl = specificLessonRepository.getById(l);
+                            ggghgdids.add(cl.getGroupId());
+                        }
+                        for (Long l : ggghgdids) {
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
-                                if (m.getUserId() == u.getId() && (cl.getUserId() == u.getId() || m.getRoles().contains(MemberRole.ADMIN)))
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
@@ -524,14 +573,30 @@ public class AuthorizeUserService {
                         }
                         break;
                     case OUTLINE_MEDIA_COMMENT:
+                        Set<Long> sidggdds = new HashSet<>();
                         for (Long l : authorizeEntity.getIds()) {
-                            OutlineMediaComment omc = outlineMediaCommentRepository.getById(l);
-                            OutlineMedia om = outlineMediaRepository.getById(omc.getMediaId());
-                            Outline cl = outlineRepository.getById(om.getOutlineId());
-                            SpecificLesson sl = specificLessonRepository.getById(cl.getSpecificLessonId());
+                            OutlineMediaComment cl = outlineMediaCommentRepository.getById(l);
+                            sidggdds.add(cl.getMediaId());
+                        }
+                        Set<Long> sidgdds = new HashSet<>();
+                        for (Long l : sidggdds) {
+                            OutlineMedia cl = outlineMediaRepository.getById(l);
+                            sidgdds.add(cl.getOutlineId());
+                        }
+                        Set<Long> sidddgds = new HashSet<>();
+                        for (Long l : sidgdds) {
+                            Outline cl = outlineRepository.getById(l);
+                            sidddgds.add(cl.getSpecificLessonId());
+                        }
+                        Set<Long> ggghgfdids = new HashSet<>();
+                        for (Long l : sidddgds) {
+                            SpecificLesson cl = specificLessonRepository.getById(l);
+                            ggghgfdids.add(cl.getGroupId());
+                        }
+                        for (Long l : ggghgfdids) {
                             boolean fl = false;
-                            for (Member m : memberRepository.getByGroupId(sl.getGroupId())) {
-                                if (m.getUserId() == u.getId() && (cl.getUserId() == u.getId() || m.getRoles().contains(MemberRole.ADMIN)))
+                            for (Member m : memberRepository.getByGroupId(l)) {
+                                if (m.getUserId() == u.getId())
                                     fl = true;
                             }
                             if (!fl)
