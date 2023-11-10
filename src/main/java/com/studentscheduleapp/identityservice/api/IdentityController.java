@@ -1,6 +1,5 @@
 package com.studentscheduleapp.identityservice.api;
 
-import com.studentscheduleapp.identityservice.models.api.AuthorizeServiceRequest;
 import com.studentscheduleapp.identityservice.models.api.AuthorizeUserRequest;
 import com.studentscheduleapp.identityservice.models.api.VerifyEmailRequest;
 import com.studentscheduleapp.identityservice.models.api.AuthorizeEntity;
@@ -138,10 +137,6 @@ public class IdentityController {
         if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), authorizeUserRequest.getAuthorizeEntity()))
             return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
-    }
-    @PostMapping("service/authorize")
-    public ResponseEntity<Boolean> authorizeService(@RequestBody AuthorizeServiceRequest authorizeServiceRequest){
-        return ResponseEntity.ok(authorizeServiceService.authorize(authorizeServiceRequest.getServiceToken()));
     }
 
 }
