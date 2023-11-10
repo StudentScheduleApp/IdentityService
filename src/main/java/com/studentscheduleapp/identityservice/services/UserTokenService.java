@@ -1,6 +1,8 @@
 package com.studentscheduleapp.identityservice.services;
 
+import com.studentscheduleapp.identityservice.models.RefreshToken;
 import com.studentscheduleapp.identityservice.models.User;
+import com.studentscheduleapp.identityservice.repos.JwtRefreshTokenRepository;
 import com.studentscheduleapp.identityservice.security.ServiceAuthentication;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.models.api.JwtLoginRequest;
@@ -8,6 +10,7 @@ import com.studentscheduleapp.identityservice.models.api.JwtResponse;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +23,7 @@ import java.util.Map;
 public class UserTokenService {
 
     private final UserService userService;
-    private final Map<String, String> refreshStorage = new HashMap<>();
+    private JwtRefreshTokenRepository jwtRefreshTokenRepository;
     private final JwtProvider jwtProvider;
 
     public JwtResponse login(@NonNull JwtLoginRequest authRequest) throws Exception {
@@ -30,7 +33,7 @@ public class UserTokenService {
         if (user.getPassword().equals(authRequest.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
-            refreshStorage.put(user.getEmail(), refreshToken);
+            jwtRefreshTokenRepository.save(new RefreshToken(user.getEmail(), refreshToken));
             return new JwtResponse(user.getId(), accessToken, refreshToken);
         } else {
             throw new AuthException();
@@ -41,7 +44,7 @@ public class UserTokenService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
+            final String saveRefreshToken = jwtRefreshTokenRepository.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByEmail(login);
                 if(user == null)
@@ -57,14 +60,14 @@ public class UserTokenService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
+            final String saveRefreshToken = jwtRefreshTokenRepository.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByEmail(login);
                 if(user == null)
                     throw new AuthException();
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
-                refreshStorage.put(user.getEmail(), newRefreshToken);
+                jwtRefreshTokenRepository.save(new RefreshToken(user.getEmail(), refreshToken));
                 return new JwtResponse(user.getId(), accessToken, newRefreshToken);
             }
         }
