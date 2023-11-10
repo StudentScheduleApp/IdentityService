@@ -1,7 +1,6 @@
 package com.studentscheduleapp.identityservice.repos;
 
 import com.studentscheduleapp.identityservice.models.CustomLesson;
-import com.studentscheduleapp.identityservice.models.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

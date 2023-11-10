@@ -1,6 +1,5 @@
 package com.studentscheduleapp.identityservice.repos;
 
-import com.studentscheduleapp.identityservice.models.OutlineMedia;
 import com.studentscheduleapp.identityservice.models.ScheduleTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

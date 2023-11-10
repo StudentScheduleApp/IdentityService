@@ -1,6 +1,5 @@
 package com.studentscheduleapp.identityservice.repos;
 
-import com.studentscheduleapp.identityservice.models.ScheduleTemplate;
 import com.studentscheduleapp.identityservice.models.SpecificLesson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,7 +1,6 @@
 package com.studentscheduleapp.identityservice.repos;
 
 import com.studentscheduleapp.identityservice.models.OutlineMedia;
-import com.studentscheduleapp.identityservice.models.OutlineMediaComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

@@ -2,21 +2,18 @@ package com.studentscheduleapp.identityservice.services;
 
 import com.studentscheduleapp.identityservice.models.RefreshToken;
 import com.studentscheduleapp.identityservice.models.User;
-import com.studentscheduleapp.identityservice.repos.JwtRefreshTokenRepository;
-import com.studentscheduleapp.identityservice.security.ServiceAuthentication;
-import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.models.api.JwtLoginRequest;
 import com.studentscheduleapp.identityservice.models.api.JwtResponse;
+import com.studentscheduleapp.identityservice.repos.JwtRefreshTokenRepository;
+import com.studentscheduleapp.identityservice.security.JwtProvider;
+import com.studentscheduleapp.identityservice.security.ServiceAuthentication;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.message.AuthException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
