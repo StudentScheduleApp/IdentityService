@@ -30,7 +30,7 @@ public class JwtRefreshTokenRepository {
         throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
     }
     public String get(String email) throws Exception{
-        ResponseEntity<String> r = restTemplate.getForEntity(databaseService + "/api/refresh/" + email, String.class);
+        ResponseEntity<String> r = restTemplate.getForEntity(databaseService + "/api/refresh/email/" + email, String.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
