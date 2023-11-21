@@ -10,6 +10,7 @@ import com.studentscheduleapp.identityservice.security.ServiceAuthentication;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import javax.security.auth.message.AuthException;
 public class UserTokenService {
 
     private final UserService userService;
+    @Autowired
     private JwtRefreshTokenRepository jwtRefreshTokenRepository;
     private final JwtProvider jwtProvider;
 
