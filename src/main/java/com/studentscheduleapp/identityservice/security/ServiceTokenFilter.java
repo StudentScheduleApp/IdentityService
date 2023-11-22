@@ -16,6 +16,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @Slf4j
 @Component
@@ -29,11 +30,16 @@ public class ServiceTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
         final String token = getTokenFromRequest((HttpServletRequest) request);
-        if (token != null && authorizeServiceService.authorize(token)) {
-            final ServiceAuthentication appInfoToken = new ServiceAuthentication();
-            appInfoToken.setAuthenticated(true);
-            appInfoToken.setServiceName("service");
-            SecurityContextHolder.getContext().setAuthentication(appInfoToken);
+        try {
+            if (token != null && authorizeServiceService.authorize(token)) {
+                final ServiceAuthentication appInfoToken = new ServiceAuthentication();
+                appInfoToken.setAuthenticated(true);
+                appInfoToken.setServiceName("service");
+                SecurityContextHolder.getContext().setAuthentication(appInfoToken);
+                Logger.getGlobal().info("authorize service with token " + token + " success");
+            }
+        } catch (Exception e) {
+            Logger.getGlobal().info("authorize service with token " + token + " failed: " + e.getMessage());
         }
         fc.doFilter(request, response);
     }

@@ -81,18 +81,27 @@ public class IdentityController {
 
     @PostMapping("user/register")
     public ResponseEntity<Void> register(@RequestBody JwtRegisterRequest authRequest) {
-        if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty())
+        if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty()) {
+            Logger.getGlobal().info("bad request: email is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty())
+        }
+        if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
+            Logger.getGlobal().info("bad request: password is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        if(authRequest.getFirstName() == null || authRequest.getFirstName().isEmpty())
+        }
+        if(authRequest.getFirstName() == null || authRequest.getFirstName().isEmpty()) {
+            Logger.getGlobal().info("bad request: firstName is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        if(authRequest.getLastName() == null || authRequest.getLastName().isEmpty())
+        }
+        if(authRequest.getLastName() == null || authRequest.getLastName().isEmpty()) {
+            Logger.getGlobal().info("bad request: lastName is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         User usr = null;
         try {
             usr = userService.getByEmail(authRequest.getEmail());
         }  catch (Exception e) {
+            Logger.getGlobal().info("register failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         if(usr == null){
@@ -102,12 +111,15 @@ public class IdentityController {
             verifyUserCache.put(u.getEmail(), u);
             try {
                 verifyEmailService.sendCode(u.getEmail());
+                Logger.getGlobal().info("verify code send successful");
             } catch (Exception e) {
+                Logger.getGlobal().info("register failed: email not send successful");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             return ResponseEntity.ok().build();
         }
         else {
+            Logger.getGlobal().info("register failed: email s busy");
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -126,15 +138,20 @@ public class IdentityController {
                 }
                 try {
                     final JwtResponse token = userTokenService.login(new JwtLoginRequest(u.getEmail(), u.getPassword()));
+                    Logger.getGlobal().info("verify and register successful");
                     return ResponseEntity.ok(token);
                 } catch (AuthException e){
+                    Logger.getGlobal().info("verify failed: unauthorized");
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 } catch (Exception e) {
+                    Logger.getGlobal().info("verify failed:" + e.getMessage());
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
             }
+            Logger.getGlobal().info("verify failed: code for email " + verifyEmailRequest.getEmail() + " not match with code in cache");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        Logger.getGlobal().info("verify failed: email " + verifyEmailRequest.getEmail() + " not found in cache");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
