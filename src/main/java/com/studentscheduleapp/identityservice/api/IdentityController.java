@@ -17,6 +17,7 @@ import javax.security.auth.message.AuthException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("api/")
@@ -37,16 +38,23 @@ public class IdentityController {
 
     @PostMapping("user/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtLoginRequest authRequest) {
-        if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty())
+        if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty()) {
+            Logger.getGlobal().info("bad request: email is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty())
+        }
+        if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
+            Logger.getGlobal().info("bad request: password is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         try {
             final JwtResponse token = userTokenService.login(authRequest);
+            Logger.getGlobal().info("login fo " + token.getId() + " successful");
             return ResponseEntity.ok(token);
         } catch (AuthException e){
+            Logger.getGlobal().info("login fo " + authRequest.getEmail() + " failed: unauthorized");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
+            Logger.getGlobal().info("login fo " + authRequest.getEmail() + " failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -54,14 +62,19 @@ public class IdentityController {
 
     @PostMapping("user/refresh")
     public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
-        if(request.getRefreshToken() == null || request.getRefreshToken().isEmpty())
+        if(request.getRefreshToken() == null || request.getRefreshToken().isEmpty()) {
+            Logger.getGlobal().info("bad request: refreshToken is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         try {
             final JwtResponse token = userTokenService.refresh(request.getRefreshToken());
+            Logger.getGlobal().info("refresh fo " + token.getId() + " successful");
             return ResponseEntity.ok(token);
         } catch (AuthException e){
+            Logger.getGlobal().info("refresh failed: unauthorized");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
+            Logger.getGlobal().info("refresh failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
