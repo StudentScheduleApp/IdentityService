@@ -1,15 +1,18 @@
 package com.studentscheduleapp.identityservice.services;
 
+import com.studentscheduleapp.identityservice.properties.GlobalProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthorizeServiceService {
-    @Value("${service.token}")
-    private String serviceToken;
+
+    @Autowired
+    private GlobalProperties globalProperties;
 
     public boolean authorize(String token){
-        return serviceToken.equals(token);
+        return globalProperties.getServiceToken().equals(token);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.studentscheduleapp.identityservice.repos;
 
 import com.studentscheduleapp.identityservice.models.OutlineMedia;
+import com.studentscheduleapp.identityservice.properties.services.DatabaseServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -15,40 +16,42 @@ public class OutlineMediaRepository {
 
 
 
-    @Value("${ip.databaseservice}")
-    private String databaseService;
+
+    @Autowired
+    private DatabaseServiceProperties databaseServiceProperties;
+
 
     @Autowired
     private RestTemplate restTemplate;
 
     public OutlineMedia getById(long id) throws Exception {
-        ResponseEntity<OutlineMedia> r = restTemplate.getForEntity(databaseService + "/api/outlineMedia/id/" + id, OutlineMedia.class);
+        ResponseEntity<OutlineMedia> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaByIdPath() + id, OutlineMedia.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
-        throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
+        throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public List<OutlineMedia> getByOutlineId(long id) throws Exception {
-        ResponseEntity<List> r = restTemplate.getForEntity(databaseService + "/api/outlineMedia/outlineMedia/" + id, List.class);
+        ResponseEntity<List> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaByOutlineIdPath() + id, List.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
-        throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
+        throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public OutlineMedia save(OutlineMedia customLesson) throws Exception {
-        ResponseEntity<OutlineMedia> r = restTemplate.postForEntity(databaseService + "/api/outlineMedia/save", customLesson, OutlineMedia.class);
+        ResponseEntity<OutlineMedia> r = restTemplate.postForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getSaveOutlineMediaPath(), customLesson, OutlineMedia.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if (r.getStatusCode().equals(HttpStatus.CONFLICT))
             return null;
-        throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
+        throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public boolean delete(long id) throws Exception {
-        ResponseEntity<Void> r = restTemplate.getForEntity(databaseService + "/api/outlineMedia/delete/" + id, Void.class);
+        ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteOutlineMediaPath() + id, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
-        throw new Exception("request to " + databaseService + " return code " + r.getStatusCode());
+        throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 }
