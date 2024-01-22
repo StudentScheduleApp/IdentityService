@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("api/")
 @RequiredArgsConstructor
 public class IdentityController {
 
@@ -36,7 +35,7 @@ public class IdentityController {
     private UserService userService;
     private final Map<String, User> verifyUserCache = new HashMap<>();
 
-    @PostMapping("user/login")
+    @PostMapping("${mapping.user.login}")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtLoginRequest authRequest) {
         if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty()) {
             Logger.getGlobal().info("bad request: email is null or empty");
@@ -60,7 +59,7 @@ public class IdentityController {
     }
 
 
-    @PostMapping("user/refresh")
+    @PostMapping("${mapping.user.refresh}")
     public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
         if(request.getRefreshToken() == null || request.getRefreshToken().isEmpty()) {
             Logger.getGlobal().info("bad request: refreshToken is null or empty");
@@ -79,7 +78,7 @@ public class IdentityController {
         }
     }
 
-    @PostMapping("user/register")
+    @PostMapping("${mapping.user.register}")
     public ResponseEntity<Void> register(@RequestBody JwtRegisterRequest authRequest) {
         if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty()) {
             Logger.getGlobal().info("bad request: email is null or empty");
@@ -125,7 +124,7 @@ public class IdentityController {
 
     }
 
-    @PostMapping("user/verify")
+    @PostMapping("${mapping.user.verify}")
     public ResponseEntity<JwtResponse> verify(@RequestBody VerifyEmailRequest verifyEmailRequest){
         if (verifyUserCache.get(verifyEmailRequest.getEmail()) != null){
             if(verifyEmailService.verify(verifyEmailRequest)){
@@ -156,7 +155,7 @@ public class IdentityController {
 
     }
 
-    @PostMapping("user/authorize")
+    @PostMapping("${mapping.user.authorize}")
     public ResponseEntity<Boolean> authorizeUser(@RequestBody AuthorizeUserRequest authorizeUserRequest){
         if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), authorizeUserRequest.getAuthorizeEntity()))
             return ResponseEntity.ok(false);
