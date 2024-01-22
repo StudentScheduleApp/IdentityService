@@ -25,13 +25,13 @@ public class JwtRefreshTokenRepository {
         throw new Exception("request to " + databaseTokenServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public boolean delete(String email) throws Exception{
-        ResponseEntity<Void> r = restTemplate.getForEntity(databaseTokenServiceProperties.getUri() + databaseTokenServiceProperties.getDeletePath() + email, Void.class);
+        ResponseEntity<Void> r = restTemplate.getForEntity(databaseTokenServiceProperties.getUri() + databaseTokenServiceProperties.getDeletePath() + "/" + email, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
         throw new Exception("request to " + databaseTokenServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public String get(String email) throws Exception{
-        ResponseEntity<String> r = restTemplate.getForEntity(databaseTokenServiceProperties.getUri() + databaseTokenServiceProperties.getGetPath() + email, String.class);
+        ResponseEntity<String> r = restTemplate.getForEntity(databaseTokenServiceProperties.getUri() + databaseTokenServiceProperties.getGetPath() + "/" + email, String.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))

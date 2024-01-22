@@ -21,7 +21,7 @@ public class GroupRepository {
     private RestTemplate restTemplate;
 
     public Group getById(long id) throws Exception {
-        ResponseEntity<Group> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetGroupByIdPath() + id, Group.class);
+        ResponseEntity<Group> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetGroupByIdPath() + "/" + id, Group.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
@@ -37,7 +37,7 @@ public class GroupRepository {
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public boolean delete(long id) throws Exception {
-        ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteGroupPath() + id, Void.class);
+        ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteGroupPath() + "/" + id, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());

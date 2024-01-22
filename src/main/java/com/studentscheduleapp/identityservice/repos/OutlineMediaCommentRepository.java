@@ -23,7 +23,7 @@ public class OutlineMediaCommentRepository {
     private RestTemplate restTemplate;
 
     public OutlineMediaComment getById(long id) throws Exception {
-        ResponseEntity<OutlineMediaComment> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaCommentByIdPath() + id, OutlineMediaComment.class);
+        ResponseEntity<OutlineMediaComment> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaCommentByIdPath() + "/" + id, OutlineMediaComment.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
@@ -31,7 +31,7 @@ public class OutlineMediaCommentRepository {
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public List<OutlineMediaComment> getByOutlineMediaId(long id) throws Exception {
-        ResponseEntity<List> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaCommentByOutlineMediaIdPath() + id, List.class);
+        ResponseEntity<List> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaCommentByOutlineMediaIdPath() + "/" + id, List.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
@@ -47,7 +47,7 @@ public class OutlineMediaCommentRepository {
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public boolean delete(long id) throws Exception {
-        ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteOutlineMediaCommentPath() + id, Void.class);
+        ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteOutlineMediaCommentPath() + "/" + id, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
