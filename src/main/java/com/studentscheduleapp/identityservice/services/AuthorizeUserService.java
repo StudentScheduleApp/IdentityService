@@ -244,9 +244,9 @@ public class AuthorizeUserService {
             }
             if (authorizeEntity.getType().equals(AuthorizeType.CREATE)){
                 switch (authorizeEntity.getEntity()) {
-                    case USER:
                     case SPECIFIC_LESSON:
                         return false;
+                    case USER:
                     case GROUP:
                         return true;
                     case CUSTOM_LESSON:
