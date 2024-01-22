@@ -20,7 +20,11 @@ public class VerifyEmailService {
 
 
     public void sendCode(String email) throws Exception {
-        long code = Math.round(Math.random() * 100000);
+        long code;
+        do {
+            code = Math.round(Math.random() * 100000);
+        } while (String.valueOf(code).length() != 5);
+
         mailRepository.send(new SendMailRequest(email, "Verify email", "code: " + code));
         emailCodes.put(email, code);
     }

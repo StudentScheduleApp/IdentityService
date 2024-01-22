@@ -126,6 +126,14 @@ public class IdentityController {
 
     @PostMapping("${mapping.user.verify}")
     public ResponseEntity<JwtResponse> verify(@RequestBody VerifyEmailRequest verifyEmailRequest){
+        if(verifyEmailRequest.getEmail() == null || verifyEmailRequest.getEmail().isEmpty()) {
+            Logger.getGlobal().info("bad request: email is null or empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if(verifyEmailRequest.getCode() == 0) {
+            Logger.getGlobal().info("bad request: code is 0");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         if (verifyUserCache.get(verifyEmailRequest.getEmail()) != null){
             if(verifyEmailService.verify(verifyEmailRequest)){
                 User u = verifyUserCache.get(verifyEmailRequest.getEmail());
@@ -157,6 +165,23 @@ public class IdentityController {
 
     @PostMapping("${mapping.user.authorize}")
     public ResponseEntity<Boolean> authorizeUser(@RequestBody AuthorizeUserRequest authorizeUserRequest){
+        if(authorizeUserRequest.getUserToken() == null || authorizeUserRequest.getUserToken().isEmpty()) {
+            Logger.getGlobal().info("bad request: user token is null or empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if(authorizeUserRequest.getAuthorizeEntity() == null) {
+            Logger.getGlobal().info("bad request: authorize data is null");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if(authorizeUserRequest.getAuthorizeEntity().getEntity() == null) {
+            Logger.getGlobal().info("bad request: entity is null");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if(authorizeUserRequest.getAuthorizeEntity().getType() == null) {
+            Logger.getGlobal().info("bad request: type is null");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), authorizeUserRequest.getAuthorizeEntity()))
             return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
