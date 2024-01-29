@@ -53,6 +53,7 @@ public class IdentityController {
             Logger.getGlobal().info("login fo " + authRequest.getEmail() + " failed: unauthorized");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.getGlobal().info("login fo " + authRequest.getEmail() + " failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -73,6 +74,7 @@ public class IdentityController {
             Logger.getGlobal().info("refresh failed: unauthorized");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.getGlobal().info("refresh failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -116,6 +118,7 @@ public class IdentityController {
         try {
             usr = userService.getByEmail(authRequest.getEmail());
         }  catch (Exception e) {
+            e.printStackTrace();
             Logger.getGlobal().info("register failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -128,6 +131,7 @@ public class IdentityController {
                 verifyEmailService.sendCode(u.getEmail());
                 Logger.getGlobal().info("verify code send successful");
             } catch (Exception e) {
+                e.printStackTrace();
                 Logger.getGlobal().info("register failed: email not send successful");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
@@ -157,6 +161,7 @@ public class IdentityController {
                     if (userService.create(u) == null)
                         return ResponseEntity.status(HttpStatus.CONFLICT).build();
                 } catch (Exception e) {
+                    e.printStackTrace();
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
                 try {
@@ -167,6 +172,7 @@ public class IdentityController {
                     Logger.getGlobal().info("verify failed: unauthorized");
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 } catch (Exception e) {
+                    e.printStackTrace();
                     Logger.getGlobal().info("verify failed:" + e.getMessage());
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
