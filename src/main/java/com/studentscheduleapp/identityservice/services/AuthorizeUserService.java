@@ -4,6 +4,7 @@ import com.studentscheduleapp.identityservice.models.*;
 import com.studentscheduleapp.identityservice.models.api.AuthorizeEntity;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
+import com.studentscheduleapp.identityservice.services.userauthorize.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,54 @@ public class AuthorizeUserService {
     private JwtProvider jwtProvider;
 
     public boolean authorize(String token, AuthorizeEntity authorizeEntity){
+
+
+        Authorized auth;
+        switch (authorizeEntity.getEntity()) {
+            case CUSTOM_LESSON:
+                auth = new CustomLessonAuthorizeService();
+                break;
+            case GROUP:
+                auth = new GroupAuthorizeService();
+                break;
+            case LESSON_TEMPLATE:
+                auth = new LessonTemplateAuthorizeService();
+                break;
+            case MEMBER:
+                auth = new MemberAuthorizeService();
+                break;
+            case OUTLINE_MEDIA_COMMENT:
+                auth = new OutlineMediaCommentAuthorizeService();
+                break;
+            case OUTLINE_MEDIA:
+                auth = new OutlineMediaAuthorizeService();
+                break;
+            case OUTLINE:
+                auth = new OutlineAuthorizeService();
+                break;
+            case SCHEDULE_TEMPLATE:
+                auth = new ScheduleTemplateAuthorizeService();
+                break;
+            case SPECIFIC_LESSON:
+                auth = new SpecificLessonAuthorizeService();
+                break;
+            case USER:
+                auth = new UserAuthorizeService();
+                break;
+            default:
+                auth = null;
+        }
+        if (auth == null)
+            return false;
+        auth.initialize(authorizeEntity.getType(), token, authorizeEntity.getIds(), authorizeEntity.getParams());
+        return auth.authorize();
+
+
+
+
+        /*
+
+
         try {
             User u = userRepository.getByEmail(jwtProvider.getAccessClaims(token).getSubject());
             if (u == null)
@@ -710,6 +759,8 @@ public class AuthorizeUserService {
             return false;
         }
         return true;
+
+         */
     }
 
 }
