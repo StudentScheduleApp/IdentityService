@@ -98,19 +98,19 @@ public class IdentityController {
             Logger.getGlobal().info("bad request: lastName is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if(authRequest.getEmail() != null || authRequest.getEmail().length() > 255) {
+        if(authRequest.getEmail() != null && authRequest.getEmail().length() > 255) {
             Logger.getGlobal().info("bad request: email length > 255");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if(authRequest.getPassword() != null || authRequest.getPassword().length() > 255) {
+        if(authRequest.getPassword() != null && authRequest.getPassword().length() > 255) {
             Logger.getGlobal().info("bad request: password length > 255");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if(authRequest.getFirstName() != null || authRequest.getFirstName().length() > 255) {
+        if(authRequest.getFirstName() != null && authRequest.getFirstName().length() > 255) {
             Logger.getGlobal().info("bad request: first name length > 255");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if(authRequest.getLastName() != null || authRequest.getLastName().length() > 255) {
+        if(authRequest.getLastName() != null && authRequest.getLastName().length() > 255) {
             Logger.getGlobal().info("bad request: last name length > 255");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
