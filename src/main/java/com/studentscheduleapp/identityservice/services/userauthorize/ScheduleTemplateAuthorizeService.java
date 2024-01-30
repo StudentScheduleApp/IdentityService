@@ -38,21 +38,45 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
 
     @Override
     protected boolean authorizeDelete() {
-        return false;
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
     protected boolean authorizePatch() {
-        return false;
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
     protected boolean authorizeCreate() {
-        return false;
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
     protected boolean authorizeGet() {
-        return false;
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

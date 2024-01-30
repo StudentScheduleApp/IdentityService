@@ -1,13 +1,18 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.AuthorizeType;
+import com.studentscheduleapp.identityservice.models.CustomLesson;
+import com.studentscheduleapp.identityservice.models.Member;
+import com.studentscheduleapp.identityservice.models.Role;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CustomLessonAuthorizeService extends Authorized {
@@ -38,21 +43,45 @@ public class CustomLessonAuthorizeService extends Authorized {
 
     @Override
     protected boolean authorizeDelete() {
-        return false;
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
     protected boolean authorizePatch() {
-        return false;
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
     protected boolean authorizeCreate() {
-        return false;
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
     protected boolean authorizeGet() {
-        return false;
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
