@@ -2,6 +2,7 @@ package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.AuthorizeType;
 import com.studentscheduleapp.identityservice.repos.*;
+import com.studentscheduleapp.identityservice.security.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +32,12 @@ public class UserAuthorizeService extends Authorized {
     @Autowired
     private UserRepository userRepository;
 
+    public UserAuthorizeService(UserRepository ur, JwtProvider jwtProvider) {
+        super(ur, jwtProvider);
+    }
+
     @Override
     protected boolean authorizeDelete() {
-        try {
-            userRepository.getByEmail("sdsdfsf");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return false;
     }
 

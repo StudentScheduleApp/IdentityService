@@ -10,21 +10,27 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
-public class Authorized {
+public abstract class Authorized {
+
+    private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
     private AuthorizeType type;
     private String token;
+
     protected User user;
     protected List<Long> ids;
     protected List<String> params;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JwtProvider jwtProvider;
 
-    public final void initialize(AuthorizeType type, String token, List<Long> ids, List<String> params) {
-        this.type = type;
+    public Authorized(UserRepository userRepository, JwtProvider jwtProvider) {
+        this.userRepository = userRepository;
+        this.jwtProvider = jwtProvider;
+    }
+
+    public final void init(String token, AuthorizeType type, List<Long> ids, List<String> params){
         this.token = token;
+        this.type = type;
         this.ids = ids;
         this.params = params;
     }
@@ -53,17 +59,9 @@ public class Authorized {
         }
     }
 
-    protected boolean authorizeDelete(){
-        return false;
-    }
-    protected boolean authorizePatch(){
-        return false;
-    }
-    protected boolean authorizeCreate(){
-        return false;
-    }
-    protected boolean authorizeGet(){
-        return false;
-    }
+    protected abstract boolean authorizeDelete();
+    protected abstract boolean authorizePatch();
+    protected abstract boolean authorizeCreate();
+    protected abstract boolean authorizeGet();
 }
 

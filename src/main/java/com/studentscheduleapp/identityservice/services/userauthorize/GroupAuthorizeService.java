@@ -2,6 +2,7 @@ package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.AuthorizeType;
 import com.studentscheduleapp.identityservice.repos.*;
+import com.studentscheduleapp.identityservice.security.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,10 @@ public class GroupAuthorizeService extends Authorized {
     private SpecificLessonRepository specificLessonRepository;
     @Autowired
     private UserRepository userRepository;
+
+    public GroupAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
+        super(userRepository, jwtProvider);
+    }
 
     @Override
     protected boolean authorizeDelete() {

@@ -43,41 +43,41 @@ public class AuthorizeUserService {
         Authorized auth;
         switch (authorizeEntity.getEntity()) {
             case CUSTOM_LESSON:
-                auth = new CustomLessonAuthorizeService();
+                auth = new CustomLessonAuthorizeService(userRepository, jwtProvider);
                 break;
             case GROUP:
-                auth = new GroupAuthorizeService();
+                auth = new GroupAuthorizeService(userRepository, jwtProvider);
                 break;
             case LESSON_TEMPLATE:
-                auth = new LessonTemplateAuthorizeService();
+                auth = new LessonTemplateAuthorizeService(userRepository, jwtProvider);
                 break;
             case MEMBER:
-                auth = new MemberAuthorizeService();
+                auth = new MemberAuthorizeService(userRepository, jwtProvider);
                 break;
             case OUTLINE_MEDIA_COMMENT:
-                auth = new OutlineMediaCommentAuthorizeService();
+                auth = new OutlineMediaCommentAuthorizeService(userRepository, jwtProvider);
                 break;
             case OUTLINE_MEDIA:
-                auth = new OutlineMediaAuthorizeService();
+                auth = new OutlineMediaAuthorizeService(userRepository, jwtProvider);
                 break;
             case OUTLINE:
-                auth = new OutlineAuthorizeService();
+                auth = new OutlineAuthorizeService(userRepository, jwtProvider);
                 break;
             case SCHEDULE_TEMPLATE:
-                auth = new ScheduleTemplateAuthorizeService();
+                auth = new ScheduleTemplateAuthorizeService(userRepository, jwtProvider);
                 break;
             case SPECIFIC_LESSON:
-                auth = new SpecificLessonAuthorizeService();
+                auth = new SpecificLessonAuthorizeService(userRepository, jwtProvider);
                 break;
             case USER:
-                auth = new UserAuthorizeService();
+                auth = new UserAuthorizeService(userRepository, jwtProvider);
                 break;
             default:
                 auth = null;
         }
         if (auth == null)
             return false;
-        auth.initialize(authorizeEntity.getType(), token, authorizeEntity.getIds(), authorizeEntity.getParams());
+        auth.init(token, authorizeEntity.getType(), authorizeEntity.getIds(), authorizeEntity.getParams());
         return auth.authorize();
 
 
