@@ -43,7 +43,7 @@ public abstract class Authorized {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (user == null)
+        if (user == null || user.getBanned())
             return false;
         switch (type){
             case GET:
