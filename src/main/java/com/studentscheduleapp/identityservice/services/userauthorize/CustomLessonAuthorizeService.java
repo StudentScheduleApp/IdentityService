@@ -44,44 +44,47 @@ public class CustomLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-
+            return checkUserForAdmin();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     @Override
     protected boolean authorizePatch() {
         try {
-
+            return checkUserForAdmin();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     @Override
     protected boolean authorizeCreate() {
         try {
-
+            return checkUserForAdmin();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     @Override
     protected boolean authorizeGet() {
         try {
-
+            if(memberRepository.getByUserId(user.getId()).size() > 0
+                    && user.getRoles().contains(Role.USER)){
+                return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
+        return false;
+    }
+    private boolean checkUserForAdmin() throws Exception {
+        return memberRepository.getByUserId(user.getId()).size() > 0 && user.getRoles().contains(Role.ADMIN);
     }
 }
