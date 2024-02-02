@@ -1,16 +1,12 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.AuthorizeType;
-import com.studentscheduleapp.identityservice.models.Entity;
+import com.studentscheduleapp.identityservice.models.Role;
 import com.studentscheduleapp.identityservice.models.User;
 import com.studentscheduleapp.identityservice.repos.UserRepository;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
 
 public abstract class Authorized {
 
@@ -26,6 +22,7 @@ public abstract class Authorized {
     public Authorized(UserRepository userRepository, JwtProvider jwtProvider) {
         this.userRepository = userRepository;
         this.jwtProvider = jwtProvider;
+
     }
 
     public final void init(String token, AuthorizeType type, List<Long> ids, List<String> params){

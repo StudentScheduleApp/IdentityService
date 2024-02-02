@@ -1,13 +1,12 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
-import com.studentscheduleapp.identityservice.models.AuthorizeType;
-import com.studentscheduleapp.identityservice.models.CustomLesson;
-import com.studentscheduleapp.identityservice.models.Member;
-import com.studentscheduleapp.identityservice.models.Role;
+import com.studentscheduleapp.identityservice.models.*;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
+import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -36,6 +35,8 @@ public class CustomLessonAuthorizeService extends Authorized {
     private SpecificLessonRepository specificLessonRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CheckUtil checkUtil;
 
     public CustomLessonAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
         super(userRepository, jwtProvider);
@@ -85,6 +86,16 @@ public class CustomLessonAuthorizeService extends Authorized {
         return false;
     }
     private boolean checkUserForAdmin() throws Exception {
-        return memberRepository.getByUserId(user.getId()).size() > 0 && user.getRoles().contains(Role.ADMIN);
+        if(user.getRoles().contains(Role.ADMIN)){
+            return true;
+        }
+        int checkedEntities = 0;
+        for(Long id : ids){
+            List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
+            if(checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){
+                checkedEntities+=1;
+            }
+        }
+        return checkedEntities == ids.size();
     }
 }

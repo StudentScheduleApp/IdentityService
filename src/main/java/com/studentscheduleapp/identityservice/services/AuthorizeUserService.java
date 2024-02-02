@@ -37,9 +37,7 @@ public class AuthorizeUserService {
     @Autowired
     private JwtProvider jwtProvider;
 
-    public boolean authorize(String token, AuthorizeEntity authorizeEntity){
-
-
+    public boolean authorize(String token, AuthorizeEntity authorizeEntity) {
         Authorized auth;
         switch (authorizeEntity.getEntity()) {
             case CUSTOM_LESSON:
@@ -83,9 +81,9 @@ public class AuthorizeUserService {
 
 
 
+
+
         /*
-
-
         try {
             User u = userRepository.getByEmail(jwtProvider.getAccessClaims(token).getSubject());
             if (u == null)
@@ -759,8 +757,6 @@ public class AuthorizeUserService {
             return false;
         }
         return true;
-
          */
     }
-
 }

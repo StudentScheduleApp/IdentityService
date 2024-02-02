@@ -1,13 +1,12 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
-import com.studentscheduleapp.identityservice.models.AuthorizeType;
+import com.studentscheduleapp.identityservice.models.Role;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
+import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class MemberAuthorizeService extends Authorized {
@@ -31,6 +30,8 @@ public class MemberAuthorizeService extends Authorized {
     private SpecificLessonRepository specificLessonRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CheckUtil checkUtil;
 
     public MemberAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
         super(userRepository, jwtProvider);
@@ -72,11 +73,11 @@ public class MemberAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeGet() {
         try {
-
+            return memberRepository.getByUserId(user.getId()).size() > 0
+                    && user.getRoles().contains(Role.USER);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 }
