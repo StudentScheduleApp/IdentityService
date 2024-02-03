@@ -18,24 +18,7 @@ public class CustomLessonAuthorizeService extends Authorized {
     @Autowired
     private CustomLessonRepository customLessonRepository;
     @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private LessonTemplateRepository lessonTemplateRepository;
-    @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private OutlineMediaCommentRepository outlineMediaCommentRepository;
-    @Autowired
-    private OutlineMediaRepository outlineMediaRepository;
-    @Autowired
-    private OutlineRepository outlineRepository;
-    @Autowired
-    private ScheduleTemplateRepository scheduleTemplateRepository;
-    @Autowired
-    private SpecificLessonRepository specificLessonRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private CheckUtil checkUtil;
 
     public CustomLessonAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
@@ -75,27 +58,27 @@ public class CustomLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeGet() {
         try {
-            if(memberRepository.getByUserId(user.getId()).size() > 0
-                    && user.getRoles().contains(Role.USER)){
-                return true;
-            }
+            return checkUserForMember();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return false;
     }
     private boolean checkUserForAdmin() throws Exception {
-        if(user.getRoles().contains(Role.ADMIN)){
-            return true;
-        }
-        int checkedEntities = 0;
         for(Long id : ids){
             List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
-            if(checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){
-                checkedEntities+=1;
+            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){
+                return false;
             }
         }
-        return checkedEntities == ids.size();
+        return true;
+    }private boolean checkUserForMember() throws Exception {
+        for(Long id : ids){
+            List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
+            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
+                return false;
+            }
+        }
+        return true;
     }
 }

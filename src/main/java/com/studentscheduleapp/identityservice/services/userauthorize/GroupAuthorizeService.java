@@ -15,27 +15,9 @@ import java.util.List;
 
 @Service
 public class GroupAuthorizeService extends Authorized {
-    @Autowired
-    private CustomLessonRepository customLessonRepository;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private LessonTemplateRepository lessonTemplateRepository;
+
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private OutlineMediaCommentRepository outlineMediaCommentRepository;
-    @Autowired
-    private OutlineMediaRepository outlineMediaRepository;
-    @Autowired
-    private OutlineRepository outlineRepository;
-    @Autowired
-    private ScheduleTemplateRepository scheduleTemplateRepository;
-    @Autowired
-    private SpecificLessonRepository specificLessonRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private CheckUtil checkUtil;
 
     public GroupAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
@@ -45,8 +27,7 @@ public class GroupAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            return memberRepository.getByUserId(user.getId()).size() > 0 &&
-                    user.getRoles().contains(Role.ULTIMATE);
+            return user.getRoles().contains(Role.ULTIMATE);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -76,24 +57,19 @@ public class GroupAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeGet() {
         try {
-            return memberRepository.getByUserId(user.getId()).size() > 0 &&
-                    user.getRoles().contains(Role.USER);
+            return user.getRoles().contains(Role.USER);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
     private boolean checkUserForAdmin() throws Exception {
-        if(user.getRoles().contains(Role.ADMIN)){
-            return true;
-        }
-        int validatedEntities = 0;
         for(Long id : ids){
             List<Member> groupMemberList = memberRepository.getByGroupId(id);
             if(checkUtil.checkUserForMemberRole(groupMemberList,user, MemberRole.ADMIN)){
-                validatedEntities +=1;
+                return false;
             }
         }
-        return validatedEntities == ids.size();
+        return true;
     }
 }

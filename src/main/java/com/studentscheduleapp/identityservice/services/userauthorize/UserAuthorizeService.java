@@ -12,26 +12,6 @@ import java.util.Set;
 
 @Service
 public class UserAuthorizeService extends Authorized {
-    @Autowired
-    private CustomLessonRepository customLessonRepository;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private LessonTemplateRepository lessonTemplateRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private OutlineMediaCommentRepository outlineMediaCommentRepository;
-    @Autowired
-    private OutlineMediaRepository outlineMediaRepository;
-    @Autowired
-    private OutlineRepository outlineRepository;
-    @Autowired
-    private ScheduleTemplateRepository scheduleTemplateRepository;
-    @Autowired
-    private SpecificLessonRepository specificLessonRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     public UserAuthorizeService(UserRepository ur, JwtProvider jwtProvider) {
         super(ur, jwtProvider);
@@ -45,7 +25,6 @@ public class UserAuthorizeService extends Authorized {
             e.printStackTrace();
             return false;
         }
-       // return true;
     }
 
     @Override
@@ -82,6 +61,8 @@ public class UserAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeGet() {
         try {
+            if (!user.getRoles().contains(Role.USER))
+                return false;
             if (!(ids.size() == 1 && ids.contains(user.getId()) || user.getRoles().contains(Role.ULTIMATE)) && (params.contains("email") || params.contains("password")))
                 return false;
         } catch (Exception e) {
