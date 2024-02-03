@@ -38,6 +38,8 @@ public class CustomLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizePatch() {
         try {
+            if (params.contains("id") || params.contains("groupId"))
+                return false;
             return checkUserForAdmin();
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +74,8 @@ public class CustomLessonAuthorizeService extends Authorized {
             }
         }
         return true;
-    }private boolean checkUserForMember() throws Exception {
+    }
+    private boolean checkUserForMember() throws Exception {
         for(Long id : ids){
             List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
             if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){

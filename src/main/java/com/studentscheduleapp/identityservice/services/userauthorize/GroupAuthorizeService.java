@@ -37,6 +37,8 @@ public class GroupAuthorizeService extends Authorized {
     @Override
     protected boolean authorizePatch() {
         try {
+            if (params.contains("id") || params.contains("chatId"))
+                return false;
             return checkUserForAdmin();
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,7 +59,7 @@ public class GroupAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeGet() {
         try {
-            return user.getRoles().contains(Role.USER);
+            return checkUserForMember();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -67,6 +69,15 @@ public class GroupAuthorizeService extends Authorized {
         for(Long id : ids){
             List<Member> groupMemberList = memberRepository.getByGroupId(id);
             if(checkUtil.checkUserForMemberRole(groupMemberList,user, MemberRole.ADMIN)){
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean checkUserForMember() throws Exception {
+        for(Long id : ids){
+            List<Member> members = memberRepository.getByGroupId(id);
+            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
                 return false;
             }
         }
