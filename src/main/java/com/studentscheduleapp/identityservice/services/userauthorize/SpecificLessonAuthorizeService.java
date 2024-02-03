@@ -69,7 +69,7 @@ public class SpecificLessonAuthorizeService extends Authorized {
     }
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids){
-            List<Member> members = memberRepository.getByGroupId(scheduleTemplateRepository.getById(id).getGroupId());
+            List<Member> members = memberRepository.getByGroupId(specificLessonRepository.getById(id).getGroupId());
             if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.ADMIN)){
                 return false;
             }
@@ -78,7 +78,7 @@ public class SpecificLessonAuthorizeService extends Authorized {
     }
     private boolean checkUserForMember() throws Exception {
         for(Long id : ids){
-            List<Member> members = memberRepository.getByGroupId(scheduleTemplateRepository.getById(id).getGroupId());
+            List<Member> members = memberRepository.getByGroupId(specificLessonRepository.getById(id).getGroupId());
             if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
                 return false;
             }

@@ -1,9 +1,6 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
-import com.studentscheduleapp.identityservice.models.CustomLesson;
-import com.studentscheduleapp.identityservice.models.Member;
-import com.studentscheduleapp.identityservice.models.MemberRole;
-import com.studentscheduleapp.identityservice.models.Role;
+import com.studentscheduleapp.identityservice.models.*;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
@@ -16,26 +13,10 @@ import java.util.List;
 @Service
 public class LessonTemplateAuthorizeService extends Authorized {
     @Autowired
-    private CustomLessonRepository customLessonRepository;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
     private LessonTemplateRepository lessonTemplateRepository;
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private OutlineMediaCommentRepository outlineMediaCommentRepository;
-    @Autowired
-    private OutlineMediaRepository outlineMediaRepository;
-    @Autowired
-    private OutlineRepository outlineRepository;
-    @Autowired
     private ScheduleTemplateRepository scheduleTemplateRepository;
-    @Autowired
-    private SpecificLessonRepository specificLessonRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private CheckUtil checkUtil;
 
     public LessonTemplateAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
@@ -55,6 +36,9 @@ public class LessonTemplateAuthorizeService extends Authorized {
     @Override
     protected boolean authorizePatch() {
         try {
+            if (params.contains("id") || params.contains("scheduleTemplateId"))
+                return false;
+            List<Member> members = memberRepository.getByUserId(user.getId());
             return checkUserForAdmin();
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,26 +59,32 @@ public class LessonTemplateAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeGet() {
         try {
-            return memberRepository.getByUserId(user.getId()).size() > 0
-                    && user.getRoles().contains(Role.USER);
+            return checkUserForMember();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
     private boolean checkUserForAdmin() throws Exception {
-        if(user.getRoles().contains(Role.ADMIN)){
-            return true;
-        }
-        int validatedEntities = 0;
         for(Long id : ids){
-            List<Member> memberList = memberRepository.getByGroupId(
-                    customLessonRepository.getById(lessonTemplateRepository.getById(id).getLessonId()).getGroupId()
-            );
-            if(checkUtil.checkUserForMemberRole(memberList,user, MemberRole.ADMIN)){
-                validatedEntities+=1;
+            LessonTemplate lessonTemplate = lessonTemplateRepository.getById(id);
+            ScheduleTemplate scheduleTemplate = scheduleTemplateRepository.getById(lessonTemplate.getScheduleTemplateId());
+            List<Member> members = memberRepository.getByGroupId(scheduleTemplate.getGroupId());
+            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){
+                return false;
             }
         }
-        return validatedEntities == ids.size();
+        return true;
+    }
+    private boolean checkUserForMember() throws Exception {
+        for(Long id : ids){
+            LessonTemplate lessonTemplate = lessonTemplateRepository.getById(id);
+            ScheduleTemplate scheduleTemplate = scheduleTemplateRepository.getById(lessonTemplate.getScheduleTemplateId());
+            List<Member> members = memberRepository.getByGroupId(scheduleTemplate.getGroupId());
+            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
+                return false;
+            }
+        }
+        return true;
     }
 }

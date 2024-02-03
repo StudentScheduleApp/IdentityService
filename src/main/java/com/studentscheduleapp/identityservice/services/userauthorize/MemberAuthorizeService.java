@@ -16,25 +16,7 @@ import java.util.List;
 @Service
 public class MemberAuthorizeService extends Authorized {
     @Autowired
-    private CustomLessonRepository customLessonRepository;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private LessonTemplateRepository lessonTemplateRepository;
-    @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private OutlineMediaCommentRepository outlineMediaCommentRepository;
-    @Autowired
-    private OutlineMediaRepository outlineMediaRepository;
-    @Autowired
-    private OutlineRepository outlineRepository;
-    @Autowired
-    private ScheduleTemplateRepository scheduleTemplateRepository;
-    @Autowired
-    private SpecificLessonRepository specificLessonRepository;
-    @Autowired
-    private UserRepository userRepository;
     private CheckUtil checkUtil;
 
     public MemberAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
@@ -103,20 +85,22 @@ public class MemberAuthorizeService extends Authorized {
         }
     }
     private boolean checkUserForAdmin() throws Exception {
+        List<Member> members = new ArrayList<>();
         for(Long id : ids){
-            List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
-            if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.ADMIN)){
-                return false;
-            }
+            members.add(memberRepository.getById(id));
+        }
+        if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.ADMIN)){
+            return false;
         }
         return true;
     }
     private boolean checkUserForMember() throws Exception {
+        List<Member> members = new ArrayList<>();
         for(Long id : ids){
-            List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
-            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
-                return false;
-            }
+            members.add(memberRepository.getById(id));
+        }
+        if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.MEMBER)){
+            return false;
         }
         return true;
     }
