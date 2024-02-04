@@ -34,7 +34,6 @@ public abstract class Authorized {
 
 
     public final boolean authorize() {
-        User user = null;
         try {
             user = userRepository.getByEmail(jwtProvider.getAccessClaims(token).getSubject());
         } catch (Exception e) {

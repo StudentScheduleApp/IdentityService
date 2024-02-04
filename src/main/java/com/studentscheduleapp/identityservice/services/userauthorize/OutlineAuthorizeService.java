@@ -11,17 +11,17 @@ import java.util.List;
 
 @Service
 public class OutlineAuthorizeService extends Authorized {
-    @Autowired
-    private OutlineRepository outlineRepository;
-    @Autowired
-    private SpecificLessonRepository specificLessonRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private CheckUtil checkUtil;
+    private final OutlineRepository outlineRepository;
+    private final SpecificLessonRepository specificLessonRepository;
+    private final MemberRepository memberRepository;
+    private final CheckUtil checkUtil;
 
-    public OutlineAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
+    public OutlineAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, OutlineRepository outlineRepository, SpecificLessonRepository specificLessonRepository, MemberRepository memberRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
+        this.outlineRepository = outlineRepository;
+        this.specificLessonRepository = specificLessonRepository;
+        this.memberRepository = memberRepository;
+        this.checkUtil = checkUtil;
     }
 
     @Override

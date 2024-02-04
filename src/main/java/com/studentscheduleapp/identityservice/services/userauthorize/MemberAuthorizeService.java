@@ -13,13 +13,13 @@ import java.util.List;
 
 @Service
 public class MemberAuthorizeService extends Authorized {
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private CheckUtil checkUtil;
+    private final MemberRepository memberRepository;
+    private final CheckUtil checkUtil;
 
-    public MemberAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
+    public MemberAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, MemberRepository memberRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
+        this.memberRepository = memberRepository;
+        this.checkUtil = checkUtil;
     }
 
     @Override

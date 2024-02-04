@@ -11,19 +11,19 @@ import java.util.List;
 
 @Service
 public class OutlineMediaAuthorizeService extends Authorized {
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private OutlineMediaRepository outlineMediaRepository;
-    @Autowired
-    private OutlineRepository outlineRepository;
-    @Autowired
-    private SpecificLessonRepository specificLessonRepository;
-    @Autowired
-    private CheckUtil checkUtil;
+    private final MemberRepository memberRepository;
+    private final OutlineMediaRepository outlineMediaRepository;
+    private final OutlineRepository outlineRepository;
+    private final SpecificLessonRepository specificLessonRepository;
+    private final CheckUtil checkUtil;
 
-    public OutlineMediaAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
+    public OutlineMediaAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, MemberRepository memberRepository, OutlineMediaRepository outlineMediaRepository, OutlineRepository outlineRepository, SpecificLessonRepository specificLessonRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
+        this.memberRepository = memberRepository;
+        this.outlineMediaRepository = outlineMediaRepository;
+        this.outlineRepository = outlineRepository;
+        this.specificLessonRepository = specificLessonRepository;
+        this.checkUtil = checkUtil;
     }
 
     @Override

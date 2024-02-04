@@ -12,15 +12,15 @@ import java.util.List;
 
 @Service
 public class ScheduleTemplateAuthorizeService extends Authorized {
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private ScheduleTemplateRepository scheduleTemplateRepository;
-    @Autowired
-    private CheckUtil checkUtil;
+    private final MemberRepository memberRepository;
+    private final ScheduleTemplateRepository scheduleTemplateRepository;
+    private final CheckUtil checkUtil;
 
-    public ScheduleTemplateAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
+    public ScheduleTemplateAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, MemberRepository memberRepository, ScheduleTemplateRepository scheduleTemplateRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
+        this.memberRepository = memberRepository;
+        this.scheduleTemplateRepository = scheduleTemplateRepository;
+        this.checkUtil = checkUtil;
     }
 
     @Override

@@ -11,15 +11,15 @@ import java.util.List;
 
 @Service
 public class CustomLessonAuthorizeService extends Authorized {
-    @Autowired
-    private CustomLessonRepository customLessonRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private CheckUtil checkUtil;
+    private final CustomLessonRepository customLessonRepository;
+    private final MemberRepository memberRepository;
+    private final CheckUtil checkUtil;
 
-    public CustomLessonAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
+    public CustomLessonAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, CustomLessonRepository customLessonRepository, MemberRepository memberRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
+        this.customLessonRepository = customLessonRepository;
+        this.memberRepository = memberRepository;
+        this.checkUtil = checkUtil;
     }
 
     @Override

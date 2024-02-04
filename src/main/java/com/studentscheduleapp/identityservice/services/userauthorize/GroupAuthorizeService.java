@@ -14,14 +14,13 @@ import java.util.List;
 
 @Service
 public class GroupAuthorizeService extends Authorized {
+    private final MemberRepository memberRepository;
+    private final CheckUtil checkUtil;
 
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private CheckUtil checkUtil;
-
-    public GroupAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
+    public GroupAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, MemberRepository memberRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
+        this.memberRepository = memberRepository;
+        this.checkUtil = checkUtil;
     }
 
     @Override
