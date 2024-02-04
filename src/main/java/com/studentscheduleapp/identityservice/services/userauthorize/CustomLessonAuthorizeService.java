@@ -4,14 +4,10 @@ import com.studentscheduleapp.identityservice.models.*;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class CustomLessonAuthorizeService extends Authorized {
@@ -19,6 +15,7 @@ public class CustomLessonAuthorizeService extends Authorized {
     private CustomLessonRepository customLessonRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
     private CheckUtil checkUtil;
 
     public CustomLessonAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {

@@ -2,14 +2,12 @@ package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.Member;
 import com.studentscheduleapp.identityservice.models.MemberRole;
-import com.studentscheduleapp.identityservice.models.Role;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,6 +15,7 @@ import java.util.List;
 public class MemberAuthorizeService extends Authorized {
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
     private CheckUtil checkUtil;
 
     public MemberAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
@@ -85,22 +84,22 @@ public class MemberAuthorizeService extends Authorized {
         }
     }
     private boolean checkUserForAdmin() throws Exception {
-        List<Member> members = new ArrayList<>();
-        for(Long id : ids){
-            members.add(memberRepository.getById(id));
-        }
-        if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.ADMIN)){
-            return false;
+        for(Long id : ids) {
+            Member member = memberRepository.getById(id);
+            List<Member> memberList = memberRepository.getByGroupId(member.getGroupId());
+            if(!checkUtil.checkUserForMemberRole(memberList,user,MemberRole.ADMIN)){
+                return false;
+            }
         }
         return true;
     }
     private boolean checkUserForMember() throws Exception {
-        List<Member> members = new ArrayList<>();
-        for(Long id : ids){
-            members.add(memberRepository.getById(id));
-        }
-        if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.MEMBER)){
-            return false;
+        for(Long id : ids) {
+            Member member = memberRepository.getById(id);
+            List<Member> memberList = memberRepository.getByGroupId(member.getGroupId());
+            if(!checkUtil.checkUserForMemberRole(memberList,user,MemberRole.MEMBER)){
+                return false;
+            }
         }
         return true;
     }

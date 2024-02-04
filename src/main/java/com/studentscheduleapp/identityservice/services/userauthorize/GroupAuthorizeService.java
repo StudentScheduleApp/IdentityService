@@ -1,6 +1,5 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
-import com.studentscheduleapp.identityservice.models.Group;
 import com.studentscheduleapp.identityservice.models.Member;
 import com.studentscheduleapp.identityservice.models.MemberRole;
 import com.studentscheduleapp.identityservice.models.Role;
@@ -18,6 +17,7 @@ public class GroupAuthorizeService extends Authorized {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
     private CheckUtil checkUtil;
 
     public GroupAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
@@ -68,7 +68,7 @@ public class GroupAuthorizeService extends Authorized {
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids){
             List<Member> groupMemberList = memberRepository.getByGroupId(id);
-            if(checkUtil.checkUserForMemberRole(groupMemberList,user, MemberRole.ADMIN)){
+            if(!checkUtil.checkUserForMemberRole(groupMemberList,user, MemberRole.ADMIN)){
                 return false;
             }
         }

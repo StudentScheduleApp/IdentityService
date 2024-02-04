@@ -1,6 +1,5 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
-import com.studentscheduleapp.identityservice.models.AuthorizeType;
 import com.studentscheduleapp.identityservice.models.Member;
 import com.studentscheduleapp.identityservice.models.MemberRole;
 import com.studentscheduleapp.identityservice.repos.*;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ScheduleTemplateAuthorizeService extends Authorized {
@@ -18,6 +16,7 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
     private MemberRepository memberRepository;
     @Autowired
     private ScheduleTemplateRepository scheduleTemplateRepository;
+    @Autowired
     private CheckUtil checkUtil;
 
     public ScheduleTemplateAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {

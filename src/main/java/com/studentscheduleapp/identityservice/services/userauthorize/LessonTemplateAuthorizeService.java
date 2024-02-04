@@ -16,7 +16,9 @@ public class LessonTemplateAuthorizeService extends Authorized {
     private LessonTemplateRepository lessonTemplateRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
     private ScheduleTemplateRepository scheduleTemplateRepository;
+    @Autowired
     private CheckUtil checkUtil;
 
     public LessonTemplateAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider) {
