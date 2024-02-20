@@ -1,5 +1,6 @@
 package com.studentscheduleapp.identityservice.repos;
 
+import com.studentscheduleapp.identityservice.models.LessonTemplate;
 import com.studentscheduleapp.identityservice.models.OutlineMediaComment;
 import com.studentscheduleapp.identityservice.properties.services.DatabaseServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -31,9 +33,9 @@ public class OutlineMediaCommentRepository {
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public List<OutlineMediaComment> getByOutlineMediaId(long id) throws Exception {
-        ResponseEntity<List> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaCommentByOutlineMediaIdPath() + "/" + id, List.class);
+        ResponseEntity<OutlineMediaComment[]> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaCommentByOutlineMediaIdPath() + "/" + id, OutlineMediaComment[].class);
         if(r.getStatusCode().is2xxSuccessful())
-            return r.getBody();
+            return Arrays.asList(r.getBody());
         if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return null;
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
