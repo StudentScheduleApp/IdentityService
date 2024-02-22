@@ -70,6 +70,8 @@ public class OutlineMediaCommentAuthorizeService extends Authorized {
     private boolean checkUserForCommentOwner() throws Exception {
         for(Long id : ids){
             OutlineMediaComment outlineMediaComment = outlineMediaCommentRepository.getById(id);
+            if(outlineMediaComment == null)
+                continue;
             if(outlineMediaComment.getUserId() != user.getId()){
                 return false;
             }
@@ -79,6 +81,8 @@ public class OutlineMediaCommentAuthorizeService extends Authorized {
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids){
             OutlineMediaComment outlineMediaComment = outlineMediaCommentRepository.getById(id);
+            if(outlineMediaComment == null)
+                continue;
             OutlineMedia outlineMedia = outlineMediaRepository.getById(outlineMediaComment.getMediaId());
             Outline outline = outlineRepository.getById(outlineMedia.getOutlineId());
             SpecificLesson specificLesson = specificLessonRepository.getById(outline.getSpecificLessonId());
@@ -92,6 +96,8 @@ public class OutlineMediaCommentAuthorizeService extends Authorized {
     private boolean checkUserForMember() throws Exception {
         for(Long id : ids){
             OutlineMediaComment outlineMediaComment = outlineMediaCommentRepository.getById(id);
+            if(outlineMediaComment == null)
+                continue;
             OutlineMedia outlineMedia = outlineMediaRepository.getById(outlineMediaComment.getMediaId());
             Outline outline = outlineRepository.getById(outlineMedia.getOutlineId());
             SpecificLesson specificLesson = specificLessonRepository.getById(outline.getSpecificLessonId());

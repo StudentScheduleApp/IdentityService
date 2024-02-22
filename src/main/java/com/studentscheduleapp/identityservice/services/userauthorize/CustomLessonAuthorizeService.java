@@ -66,6 +66,8 @@ public class CustomLessonAuthorizeService extends Authorized {
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids){
             List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
+            if(members == null || members.isEmpty())
+                continue;
             if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){
                 return false;
             }
@@ -75,6 +77,8 @@ public class CustomLessonAuthorizeService extends Authorized {
     private boolean checkUserForMember() throws Exception {
         for(Long id : ids){
             List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
+            if(members == null || members.isEmpty())
+                continue;
             if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
                 return false;
             }

@@ -68,6 +68,8 @@ public class OutlineMediaAuthorizeService extends Authorized {
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids) {
             OutlineMedia outlineMedia = outlineMediaRepository.getById(id);
+            if(outlineMedia == null)
+                continue;
             Outline outline = outlineRepository.getById(outlineMedia.getOutlineId());
             List<Member> memberList = memberRepository.getByGroupId(
                     specificLessonRepository.getById(outline.getSpecificLessonId()).getGroupId());
@@ -80,6 +82,8 @@ public class OutlineMediaAuthorizeService extends Authorized {
     private boolean checkUserForMember() throws Exception {
         for(Long id : ids){
             OutlineMedia outlineMedia = outlineMediaRepository.getById(id);
+            if(outlineMedia == null)
+                continue;
             Outline outline = outlineRepository.getById(outlineMedia.getOutlineId());
             List<Member> memberList = memberRepository.getByGroupId(
                     specificLessonRepository.getById(outline.getSpecificLessonId()).getGroupId()

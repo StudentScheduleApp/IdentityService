@@ -28,6 +28,8 @@ public class MemberAuthorizeService extends Authorized {
             List<Member> members = memberRepository.getByUserId(user.getId());
             for(Long id : ids){
                 Member member = memberRepository.getById(id);
+                if(member == null)
+                    continue;
                 if (member.getRoles().contains(MemberRole.OWNER))
                     return false;
                 Member m = members.stream().filter( i -> i.getGroupId() == member.getGroupId()).findFirst().get();
@@ -50,6 +52,8 @@ public class MemberAuthorizeService extends Authorized {
             List<Member> members = memberRepository.getByUserId(user.getId());
             for(Long id : ids){
                 Member member = memberRepository.getById(id);
+                if(member == null)
+                    continue;
                 if (member.getRoles().contains(MemberRole.OWNER))
                     return false;
                 Member m = members.stream().filter( i -> i.getGroupId() == member.getGroupId()).findFirst().get();
@@ -86,6 +90,8 @@ public class MemberAuthorizeService extends Authorized {
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids) {
             Member member = memberRepository.getById(id);
+            if(member == null)
+                continue;
             List<Member> memberList = memberRepository.getByGroupId(member.getGroupId());
             if(!checkUtil.checkUserForMemberRole(memberList,user,MemberRole.ADMIN)){
                 return false;
@@ -96,6 +102,8 @@ public class MemberAuthorizeService extends Authorized {
     private boolean checkUserForMember() throws Exception {
         for(Long id : ids) {
             Member member = memberRepository.getById(id);
+            if(member == null)
+                continue;
             List<Member> memberList = memberRepository.getByGroupId(member.getGroupId());
             if(!checkUtil.checkUserForMemberRole(memberList,user,MemberRole.MEMBER)){
                 return false;

@@ -2,6 +2,7 @@ package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.Member;
 import com.studentscheduleapp.identityservice.models.MemberRole;
+import com.studentscheduleapp.identityservice.models.ScheduleTemplate;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
@@ -66,7 +67,12 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
     }
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids){
-            List<Member> members = memberRepository.getByGroupId(scheduleTemplateRepository.getById(id).getGroupId());
+            ScheduleTemplate st = scheduleTemplateRepository.getById(id);
+            if(st == null)
+                continue;
+            List<Member> members = memberRepository.getByGroupId(st.getGroupId());
+            if(members == null || members.isEmpty())
+                continue;
             if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.ADMIN)){
                 return false;
             }
@@ -75,7 +81,10 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
 
     }private boolean checkUserForMember() throws Exception {
         for(Long id : ids){
-            List<Member> members = memberRepository.getByGroupId(scheduleTemplateRepository.getById(id).getGroupId());
+            ScheduleTemplate st = scheduleTemplateRepository.getById(id);
+            if(st == null)
+                continue;
+            List<Member> members = memberRepository.getByGroupId(st.getGroupId());
             if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
                 return false;
             }

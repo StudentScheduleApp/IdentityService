@@ -90,6 +90,8 @@ public class OutlineAuthorizeService extends Authorized {
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids){
             Outline outline = outlineRepository.getById(id);
+            if(outline == null)
+                continue;
             SpecificLesson specificLesson = specificLessonRepository.getById(outline.getSpecificLessonId());
             List<Member> members = memberRepository.getByGroupId(specificLesson.getGroupId());
             if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.ADMIN)){
@@ -101,6 +103,8 @@ public class OutlineAuthorizeService extends Authorized {
     private boolean checkUserForMember() throws Exception {
         for(Long id : ids){
             Outline outline = outlineRepository.getById(id);
+            if(outline == null)
+                continue;
             SpecificLesson specificLesson = specificLessonRepository.getById(outline.getSpecificLessonId());
             List<Member> members = memberRepository.getByGroupId(specificLesson.getGroupId());
             if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
