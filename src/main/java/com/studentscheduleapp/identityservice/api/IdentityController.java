@@ -206,8 +206,8 @@ public class IdentityController {
         return ResponseEntity.ok(true);
     }
 
-    @PostMapping("${mapping.user.getByToken}")
-    public ResponseEntity<User> getByToken(@RequestBody String token){
+    @PostMapping("${mapping.user.getIdByToken}")
+    public ResponseEntity<Long> getByToken(@RequestBody String token){
         if(token == null || token.isEmpty()) {
             Logger.getGlobal().info("bad request: user token is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -220,7 +220,7 @@ public class IdentityController {
             Logger.getGlobal().info("get user by token failed: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return user == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).build() : ResponseEntity.ok(user);
+        return user == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).build() : ResponseEntity.ok(user.getId());
     }
 
 }
