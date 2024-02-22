@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.message.AuthException;
 import java.util.ArrayList;
@@ -207,6 +204,23 @@ public class IdentityController {
         if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), authorizeUserRequest.getAuthorizeEntity()))
             return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("${mapping.user.getByToken}")
+    public ResponseEntity<User> getByToken(@RequestBody String token){
+        if(token == null || token.isEmpty()) {
+            Logger.getGlobal().info("bad request: user token is null or empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        User user = null;
+        try {
+            user = userTokenService.getUserByToken(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getGlobal().info("get user by token failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return user == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).build() : ResponseEntity.ok(user);
     }
 
 }

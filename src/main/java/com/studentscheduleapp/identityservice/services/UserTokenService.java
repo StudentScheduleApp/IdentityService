@@ -54,6 +54,14 @@ public class UserTokenService {
         }
         return new JwtResponse(0, null, null);
     }
+    public User getUserByToken(@NonNull String accessToken) throws Exception {
+        if (jwtProvider.validateAccessToken(accessToken)) {
+            final Claims claims = jwtProvider.getAccessClaims(accessToken);
+            final String login = claims.getSubject();
+            return userService.getByEmail(login);
+        }
+        return null;
+    }
 
     public JwtResponse refresh(@NonNull String refreshToken) throws Exception {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
