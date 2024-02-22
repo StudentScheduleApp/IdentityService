@@ -26,7 +26,14 @@ public class GroupAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            return user.getRoles().contains(Role.ULTIMATE);
+            if(user.getRoles().contains(Role.ULTIMATE))
+                return true;
+            for (Long l : ids){
+                Member m = memberRepository.getByGroupId(l).stream().filter(i -> i.getUserId() == user.getId()).findFirst().get();
+                if(!m.getRoles().contains(MemberRole.OWNER))
+                    return false;
+            }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
