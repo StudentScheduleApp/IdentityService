@@ -67,7 +67,7 @@ public class MemberAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeCreate() {
         try {
-            return checkUserForAdmin();
+            return memberRepository.getByUserId(user.getId()).stream().filter(i -> i.getGroupId() == ids.get(0)).findFirst().get().getRoles().contains(MemberRole.ADMIN);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
