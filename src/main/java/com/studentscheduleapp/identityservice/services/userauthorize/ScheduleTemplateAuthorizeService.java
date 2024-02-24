@@ -8,6 +8,8 @@ import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
     private final MemberRepository memberRepository;
     private final ScheduleTemplateRepository scheduleTemplateRepository;
     private final CheckUtil checkUtil;
+    private static final Logger log = LogManager.getLogger(ScheduleTemplateAuthorizeService.class);
 
     public ScheduleTemplateAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, MemberRepository memberRepository, ScheduleTemplateRepository scheduleTemplateRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);

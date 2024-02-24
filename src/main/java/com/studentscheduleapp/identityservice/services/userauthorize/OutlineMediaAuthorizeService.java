@@ -6,6 +6,8 @@ import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class OutlineMediaAuthorizeService extends Authorized {
     private final OutlineRepository outlineRepository;
     private final SpecificLessonRepository specificLessonRepository;
     private final CheckUtil checkUtil;
+    private static final Logger log = LogManager.getLogger(OutlineMediaAuthorizeService.class);
 
     public OutlineMediaAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, MemberRepository memberRepository, OutlineMediaRepository outlineMediaRepository, OutlineRepository outlineRepository, SpecificLessonRepository specificLessonRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);

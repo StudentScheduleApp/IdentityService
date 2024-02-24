@@ -4,11 +4,14 @@ import com.studentscheduleapp.identityservice.models.Role;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import org.springframework.stereotype.Service;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 
 @Service
 public class UserAuthorizeService extends Authorized {
 
+    private static final Logger log = LogManager.getLogger(UserAuthorizeService.class);
     public UserAuthorizeService(UserRepository ur, JwtProvider jwtProvider) {
         super(ur, jwtProvider);
     }
