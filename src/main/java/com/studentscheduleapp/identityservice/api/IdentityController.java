@@ -44,7 +44,7 @@ public class IdentityController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
-            log.info("bad request: JwtLoginRequest password is null or empty");
+            log.warn("bad request: JwtLoginRequest password is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         try {
@@ -57,7 +57,7 @@ public class IdentityController {
         } catch (Exception e) {
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
-            log.info("login fo " + authRequest.getEmail() + " failed:" + errors);
+            log.error("login fo " + authRequest.getEmail() + " failed:" + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -74,12 +74,12 @@ public class IdentityController {
             log.info("refresh for " + token.getId() + " successful");
             return ResponseEntity.ok(token);
         } catch (AuthException e){
-            log.info("refresh failed: unauthorized");
+            log.warn("refresh failed: unauthorized");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
-            log.info("refresh failed:" + errors);
+            log.error("refresh failed:" + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -151,11 +151,11 @@ public class IdentityController {
     @PostMapping("${mapping.user.verify}")
     public ResponseEntity<JwtResponse> verify(@RequestBody VerifyEmailRequest verifyEmailRequest){
         if(verifyEmailRequest.getEmail() == null || verifyEmailRequest.getEmail().isEmpty()) {
-            log.info("bad request: verify email is null or empty");
+            log.warn("bad request: verify email is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(verifyEmailRequest.getCode() == 0) {
-            log.info("bad request: verify code is 0");
+            log.warn("bad request: verify code is 0");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if (verifyUserCache.get(verifyEmailRequest.getEmail()) != null){
@@ -167,7 +167,7 @@ public class IdentityController {
                 } catch (Exception e) {
                     StringWriter errors = new StringWriter();
                     e.printStackTrace(new PrintWriter(errors));
-                    log.info("verify failed: " + errors);
+                    log.error("verify failed: " + errors);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
                 try {
@@ -175,12 +175,12 @@ public class IdentityController {
                     log.info("verify and register successful");
                     return ResponseEntity.ok(token);
                 } catch (AuthException e){
-                    log.info("verify failed: unauthorized");
+                    log.error("verify failed: unauthorized");
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 } catch (Exception e) {
                     StringWriter errors = new StringWriter();
                     e.printStackTrace(new PrintWriter(errors));
-                    log.info("verify failed: " + errors);
+                    log.error("verify failed: " + errors);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
             }
@@ -234,7 +234,7 @@ public class IdentityController {
             log.error("get user by token failed: user not found");
             return ResponseEntity.ok(0L);
         }
-        log.error("get user by token success: user id: " + user.getId());
+        log.info("get user by token success: user id: " + user.getId());
         return ResponseEntity.ok(user.getId());
     }
 
