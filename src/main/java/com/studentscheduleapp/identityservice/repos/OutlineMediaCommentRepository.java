@@ -33,7 +33,7 @@ public class OutlineMediaCommentRepository {
     public List<OutlineMediaComment> getByOutlineMediaId(long id) throws Exception {
         ResponseEntity<OutlineMediaComment[]> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaCommentByOutlineMediaIdPath() + "/" + id, OutlineMediaComment[].class);
         if(r.getStatusCode().is2xxSuccessful())
-            return Arrays.asList(r.getBody());
+            return r.getBody() == null ? null : Arrays.asList(r.getBody());
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public OutlineMediaComment save(OutlineMediaComment customLesson) throws Exception {
@@ -42,10 +42,9 @@ public class OutlineMediaCommentRepository {
             return r.getBody();
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
-    public boolean delete(long id) throws Exception {
+    public void delete(long id) throws Exception {
         ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteOutlineMediaCommentPath() + "/" + id, Void.class);
-        if(r.getStatusCode().is2xxSuccessful())
-            return true;
-        throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
+        if(!r.getStatusCode().is2xxSuccessful())
+            throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 }

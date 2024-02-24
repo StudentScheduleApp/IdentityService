@@ -24,11 +24,10 @@ public class JwtRefreshTokenRepository {
             return true;
         throw new Exception("request to " + databaseTokenServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
-    public boolean delete(String email) throws Exception{
+    public void delete(String email) throws Exception{
         ResponseEntity<Void> r = restTemplate.getForEntity(databaseTokenServiceProperties.getUri() + databaseTokenServiceProperties.getDeletePath() + "/" + email, Void.class);
-        if(r.getStatusCode().is2xxSuccessful())
-            return true;
-        throw new Exception("request to " + databaseTokenServiceProperties.getUri() + " return code " + r.getStatusCode());
+        if(!r.getStatusCode().is2xxSuccessful())
+            throw new Exception("request to " + databaseTokenServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public String get(String email) throws Exception{
         ResponseEntity<String> r = restTemplate.getForEntity(databaseTokenServiceProperties.getUri() + databaseTokenServiceProperties.getGetPath() + "/" + email, String.class);

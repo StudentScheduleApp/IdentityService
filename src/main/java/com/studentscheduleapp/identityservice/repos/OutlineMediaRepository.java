@@ -35,7 +35,7 @@ public class OutlineMediaRepository {
     public List<OutlineMedia> getByOutlineId(long id) throws Exception {
         ResponseEntity<OutlineMedia[]> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineMediaByOutlineIdPath() + "/" + id, OutlineMedia[].class);
         if(r.getStatusCode().is2xxSuccessful())
-            return Arrays.asList(r.getBody());
+            return r.getBody() == null ? null : Arrays.asList(r.getBody());
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public OutlineMedia save(OutlineMedia customLesson) throws Exception {
@@ -44,10 +44,9 @@ public class OutlineMediaRepository {
             return r.getBody();
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
-    public boolean delete(long id) throws Exception {
+    public void delete(long id) throws Exception {
         ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteOutlineMediaPath() + "/" + id, Void.class);
-        if(r.getStatusCode().is2xxSuccessful())
-            return true;
-        throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
+        if(!r.getStatusCode().is2xxSuccessful())
+            throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 }

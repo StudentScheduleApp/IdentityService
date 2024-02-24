@@ -32,7 +32,7 @@ public class SpecificLessonRepository {
     public List<SpecificLesson> getByGroupId(long id) throws Exception {
         ResponseEntity<SpecificLesson[]> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetSpecificLessonByGroupIdPath() + "/" + id, SpecificLesson[].class);
         if(r.getStatusCode().is2xxSuccessful())
-            return Arrays.asList(r.getBody());
+            return r.getBody() == null ? null : Arrays.asList(r.getBody());
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public SpecificLesson save(SpecificLesson customLesson) throws Exception {
@@ -41,10 +41,9 @@ public class SpecificLessonRepository {
             return r.getBody();
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
-    public boolean delete(long id) throws Exception {
+    public void delete(long id) throws Exception {
         ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteSpecificLessonPath() + "/" + id, Void.class);
-        if(r.getStatusCode().is2xxSuccessful())
-            return true;
-        throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
+        if(!r.getStatusCode().is2xxSuccessful())
+            throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 }

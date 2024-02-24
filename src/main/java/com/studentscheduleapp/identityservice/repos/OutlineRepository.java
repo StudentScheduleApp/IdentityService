@@ -34,13 +34,13 @@ public class OutlineRepository {
     public List<Outline> getBySpecificLessonId(long id) throws Exception {
         ResponseEntity<Outline[]> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineBySpecificLessonIdPath() + "/" + id, Outline[].class);
         if(r.getStatusCode().is2xxSuccessful())
-            return Arrays.asList(r.getBody());
+            return r.getBody() == null ? null : Arrays.asList(r.getBody());
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public List<Outline> getByUserId(long id) throws Exception {
         ResponseEntity<Outline[]> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getGetOutlineByUserIdPath() + "/" + id, Outline[].class);
         if(r.getStatusCode().is2xxSuccessful())
-            return Arrays.asList(r.getBody());
+            return r.getBody() == null ? null : Arrays.asList(r.getBody());
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public Outline save(Outline member) throws Exception {
@@ -49,10 +49,9 @@ public class OutlineRepository {
             return r.getBody();
         throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
-    public boolean delete(long id) throws Exception {
+    public void delete(long id) throws Exception {
         ResponseEntity<Void> r = restTemplate.getForEntity(databaseServiceProperties.getUri() + databaseServiceProperties.getDeleteOutlinePath() + "/" + id, Void.class);
-        if(r.getStatusCode().is2xxSuccessful())
-            return true;
-        throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
+        if(!r.getStatusCode().is2xxSuccessful())
+            throw new Exception("request to " + databaseServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 }
