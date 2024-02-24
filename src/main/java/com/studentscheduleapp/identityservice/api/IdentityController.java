@@ -5,16 +5,20 @@ import com.studentscheduleapp.identityservice.models.User;
 import com.studentscheduleapp.identityservice.models.api.*;
 import com.studentscheduleapp.identityservice.services.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.message.AuthException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,28 +34,30 @@ public class IdentityController {
     private AuthorizeServiceService authorizeServiceService;
     @Autowired
     private UserService userService;
+    private static final Logger log = LogManager.getLogger(IdentityController.class);
     private final Map<String, User> verifyUserCache = new HashMap<>();
 
     @PostMapping("${mapping.user.login}")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtLoginRequest authRequest) {
         if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty()) {
-            Logger.getGlobal().info("bad request: email is null or empty");
+            log.warn("bad request: JwtLoginRequest email is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
-            Logger.getGlobal().info("bad request: password is null or empty");
+            log.info("bad request: JwtLoginRequest password is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         try {
             final JwtResponse token = userTokenService.login(authRequest);
-            Logger.getGlobal().info("login fo " + token.getId() + " successful");
+            log.info("login for " + token.getId() + " successful");
             return ResponseEntity.ok(token);
         } catch (AuthException e){
-            Logger.getGlobal().info("login fo " + authRequest.getEmail() + " failed: unauthorized");
+            log.warn("login fo " + authRequest.getEmail() + " failed: unauthorized");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getGlobal().info("login fo " + authRequest.getEmail() + " failed:" + e.getMessage());
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            log.info("login fo " + authRequest.getEmail() + " failed:" + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -60,19 +66,20 @@ public class IdentityController {
     @PostMapping("${mapping.user.refresh}")
     public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
         if(request.getRefreshToken() == null || request.getRefreshToken().isEmpty()) {
-            Logger.getGlobal().info("bad request: refreshToken is null or empty");
+            log.warn("bad request: RefreshJwtRequest refreshToken is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         try {
             final JwtResponse token = userTokenService.refresh(request.getRefreshToken());
-            Logger.getGlobal().info("refresh fo " + token.getId() + " successful");
+            log.info("refresh for " + token.getId() + " successful");
             return ResponseEntity.ok(token);
         } catch (AuthException e){
-            Logger.getGlobal().info("refresh failed: unauthorized");
+            log.info("refresh failed: unauthorized");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getGlobal().info("refresh failed:" + e.getMessage());
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            log.info("refresh failed:" + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -80,62 +87,62 @@ public class IdentityController {
     @PostMapping("${mapping.user.register}")
     public ResponseEntity<Void> register(@RequestBody JwtRegisterRequest authRequest) {
         if(authRequest.getEmail() == null || authRequest.getEmail().isEmpty()) {
-            Logger.getGlobal().info("bad request: email is null or empty");
+            log.warn("bad request: JwtRegisterRequest email is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
-            Logger.getGlobal().info("bad request: password is null or empty");
+            log.warn("bad request: JwtRegisterRequest password is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(authRequest.getFirstName() == null || authRequest.getFirstName().isEmpty()) {
-            Logger.getGlobal().info("bad request: firstName is null or empty");
+            log.warn("bad request: JwtRegisterRequest firstName is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(authRequest.getLastName() == null || authRequest.getLastName().isEmpty()) {
-            Logger.getGlobal().info("bad request: lastName is null or empty");
+            log.warn("bad request: JwtRegisterRequest lastName is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if(authRequest.getEmail() != null && authRequest.getEmail().length() > 255) {
-            Logger.getGlobal().info("bad request: email length > 255");
+        if(authRequest.getEmail().length() > 255) {
+            log.warn("bad request: JwtRegisterRequest email length > 255");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if(authRequest.getPassword() != null && authRequest.getPassword().length() > 255) {
-            Logger.getGlobal().info("bad request: password length > 255");
+        if(authRequest.getPassword().length() > 255) {
+            log.warn("bad request: JwtRegisterRequest password length > 255");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if(authRequest.getFirstName() != null && authRequest.getFirstName().length() > 255) {
-            Logger.getGlobal().info("bad request: first name length > 255");
+        if(authRequest.getFirstName().length() > 255) {
+            log.warn("bad request: JwtRegisterRequest firstName length > 255");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if(authRequest.getLastName() != null && authRequest.getLastName().length() > 255) {
-            Logger.getGlobal().info("bad request: last name length > 255");
+        if(authRequest.getLastName().length() > 255) {
+            log.warn("bad request: JwtRegisterRequest lastName length > 255");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        User usr = null;
+        User usr;
         try {
             usr = userService.getByEmail(authRequest.getEmail());
-        }  catch (Exception e) {
-            e.printStackTrace();
-            Logger.getGlobal().info("register failed:" + e.getMessage());
+        } catch (Exception e) {
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            log.error("register failed:" + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         if(usr == null){
-            ArrayList<Role> roles = new ArrayList<>();
-            roles.add(Role.USER);
-            User u = new User(0L, authRequest.getEmail(), authRequest.getPassword(), authRequest.getFirstName(), authRequest.getLastName(), false, null, roles);
+            User u = new User(0L, authRequest.getEmail(), authRequest.getPassword(), authRequest.getFirstName(), authRequest.getLastName(), false, null, Collections.singletonList(Role.USER));
             verifyUserCache.put(u.getEmail(), u);
             try {
                 verifyEmailService.sendCode(u.getEmail());
-                Logger.getGlobal().info("verify code send successful");
+                log.info("verify code for email " + authRequest.getEmail() + " send successful");
             } catch (Exception e) {
-                e.printStackTrace();
-                Logger.getGlobal().info("register failed: email not send successful");
+                StringWriter errors = new StringWriter();
+                e.printStackTrace(new PrintWriter(errors));
+                log.error("register failed: email " + authRequest.getEmail() + " not send successful: " + errors);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             return ResponseEntity.ok().build();
         }
         else {
-            Logger.getGlobal().info("register failed: email s busy");
+            log.info("register failed: email " + authRequest.getEmail() + " is busy");
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -144,11 +151,11 @@ public class IdentityController {
     @PostMapping("${mapping.user.verify}")
     public ResponseEntity<JwtResponse> verify(@RequestBody VerifyEmailRequest verifyEmailRequest){
         if(verifyEmailRequest.getEmail() == null || verifyEmailRequest.getEmail().isEmpty()) {
-            Logger.getGlobal().info("bad request: email is null or empty");
+            log.info("bad request: verify email is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(verifyEmailRequest.getCode() == 0) {
-            Logger.getGlobal().info("bad request: code is 0");
+            log.info("bad request: verify code is 0");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if (verifyUserCache.get(verifyEmailRequest.getEmail()) != null){
@@ -158,26 +165,29 @@ public class IdentityController {
                     if (userService.create(u) == null)
                         return ResponseEntity.status(HttpStatus.CONFLICT).build();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    StringWriter errors = new StringWriter();
+                    e.printStackTrace(new PrintWriter(errors));
+                    log.info("verify failed: " + errors);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
                 try {
                     final JwtResponse token = userTokenService.login(new JwtLoginRequest(u.getEmail(), u.getPassword()));
-                    Logger.getGlobal().info("verify and register successful");
+                    log.info("verify and register successful");
                     return ResponseEntity.ok(token);
                 } catch (AuthException e){
-                    Logger.getGlobal().info("verify failed: unauthorized");
+                    log.info("verify failed: unauthorized");
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Logger.getGlobal().info("verify failed:" + e.getMessage());
+                    StringWriter errors = new StringWriter();
+                    e.printStackTrace(new PrintWriter(errors));
+                    log.info("verify failed: " + errors);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
             }
-            Logger.getGlobal().info("verify failed: code for email " + verifyEmailRequest.getEmail() + " not match with code in cache");
+            log.warn("verify failed: code for email " + verifyEmailRequest.getEmail() + " not match with code in cache");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Logger.getGlobal().info("verify failed: email " + verifyEmailRequest.getEmail() + " not found in cache");
+        log.warn("verify failed: email " + verifyEmailRequest.getEmail() + " not found in cache");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
@@ -185,22 +195,21 @@ public class IdentityController {
     @PostMapping("${mapping.user.authorize}")
     public ResponseEntity<Boolean> authorizeUser(@RequestBody AuthorizeUserRequest authorizeUserRequest){
         if(authorizeUserRequest.getUserToken() == null || authorizeUserRequest.getUserToken().isEmpty()) {
-            Logger.getGlobal().info("bad request: user token is null or empty");
+            log.warn("bad request: AuthorizeUserRequest userToken is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(authorizeUserRequest.getAuthorizeEntity() == null) {
-            Logger.getGlobal().info("bad request: authorize data is null");
+            log.warn("bad request: AuthorizeUserRequest authorizeEntity is null");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(authorizeUserRequest.getAuthorizeEntity().getEntity() == null) {
-            Logger.getGlobal().info("bad request: entity is null");
+            log.warn("bad request: AuthorizeUserRequest AuthorizeEntity entity is null");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if(authorizeUserRequest.getAuthorizeEntity().getType() == null) {
-            Logger.getGlobal().info("bad request: type is null");
+            log.warn("bad request: AuthorizeUserRequest type is null");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
         if(!authorizeUserService.authorize(authorizeUserRequest.getUserToken(), authorizeUserRequest.getAuthorizeEntity()))
             return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
@@ -209,18 +218,21 @@ public class IdentityController {
     @PostMapping("${mapping.user.getIdByToken}")
     public ResponseEntity<Long> getByToken(@RequestBody String token){
         if(token == null || token.isEmpty()) {
-            Logger.getGlobal().info("bad request: user token is null or empty");
+            log.warn("bad request: user token is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        User user = null;
+        User user;
         try {
             user = userTokenService.getUserByToken(token);
         } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getGlobal().info("get user by token failed: " + e.getMessage());
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            log.error("get user by token failed: " + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return user == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).build() : ResponseEntity.ok(user.getId());
+        if (user == null)
+            return ResponseEntity.ok(0L);
+        return ResponseEntity.ok(user.getId());
     }
 
 }
