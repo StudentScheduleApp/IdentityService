@@ -8,7 +8,11 @@ import com.studentscheduleapp.identityservice.services.userauthorize.*;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +43,7 @@ public class AuthorizeUserService {
     private JwtProvider jwtProvider;
     @Autowired
     private CheckUtil checkUtil;
+    private static final Logger log = LogManager.getLogger(AuthorizeUserService.class);
 
     public boolean authorize(String token, AuthorizeEntity authorizeEntity) {
         Authorized auth;
@@ -76,11 +81,23 @@ public class AuthorizeUserService {
             default:
                 auth = null;
         }
-        if (auth == null)
+        if (auth == null) {
+            log.error("authorize failed: unknown entity " + authorizeEntity.getEntity().name());
             return false;
+        }
+        if (authorizeEntity.getParams() == null)
+            authorizeEntity.setParams(Collections.emptyList());
+        if (authorizeEntity.getIds() == null)
+            authorizeEntity.setIds(Collections.emptyList());
         auth.init(token, authorizeEntity.getType(), authorizeEntity.getIds(), authorizeEntity.getParams());
-        return auth.authorize();
-
-
+        if (auth.authorize()){
+            log.info("authorize successful:" +
+                    " user: " + jwtProvider.getAccessClaims(token).getId() +
+                    " entity: " + authorizeEntity.getEntity().name() +
+                    " params: " + Arrays.toString(authorizeEntity.getParams().toArray()) +
+                    " ids: " + Arrays.toString(authorizeEntity.getIds().toArray()));
+            return true;
+        }
+        return false;
     }
 }

@@ -230,8 +230,11 @@ public class IdentityController {
             log.error("get user by token failed: " + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        if (user == null)
+        if (user == null) {
+            log.error("get user by token failed: user not found");
             return ResponseEntity.ok(0L);
+        }
+        log.error("get user by token success: user id: " + user.getId());
         return ResponseEntity.ok(user.getId());
     }
 

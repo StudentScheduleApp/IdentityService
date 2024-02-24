@@ -1,15 +1,19 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.AuthorizeType;
-import com.studentscheduleapp.identityservice.models.Role;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import com.studentscheduleapp.identityservice.models.User;
 import com.studentscheduleapp.identityservice.repos.UserRepository;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 public abstract class Authorized {
 
+    private static final Logger log = LogManager.getLogger(Authorized.class);
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private AuthorizeType type;
@@ -37,10 +41,14 @@ public abstract class Authorized {
         try {
             user = userRepository.getByEmail(jwtProvider.getAccessClaims(token).getSubject());
         } catch (Exception e) {
-            e.printStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            log.error("authorize failed: " + errors);
         }
-        if (user == null || user.getBanned())
+        if (user == null || user.getBanned()) {
+            log.warn("authorize failed: user banned or not exists");
             return false;
+        }
         switch (type){
             case GET:
                 return authorizeGet();
@@ -50,8 +58,10 @@ public abstract class Authorized {
                 return authorizePatch();
             case DELETE:
                 return authorizeDelete();
-            default:
+            default: {
+                log.error("authorize failed: unknown auth type " + type.name());
                 return false;
+            }
         }
     }
 
