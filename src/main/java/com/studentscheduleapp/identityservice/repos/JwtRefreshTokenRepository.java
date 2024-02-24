@@ -34,8 +34,6 @@ public class JwtRefreshTokenRepository {
         ResponseEntity<String> r = restTemplate.getForEntity(databaseTokenServiceProperties.getUri() + databaseTokenServiceProperties.getGetPath() + "/" + email, String.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
-        if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
-            return null;
         throw new Exception("request to " + databaseTokenServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 
