@@ -29,9 +29,11 @@ public class UserAuthorizeService extends Authorized {
     @Override
     protected boolean authorizePatch() {
         try {
-            if(params.contains("id") || params.contains("email"))
+            if(params.contains("id") || params.contains("email") || params.contains("password"))
                 return false;
-            if((params.contains("password") || params.contains("firstName") || params.contains("lastName") || params.contains("avaUrl")) && (ids.size() != 1 || !ids.contains(user.getId())))
+            if((params.contains("firstName") || params.contains("lastName")
+                    || params.contains("avaUrl")) &&
+                    !(ids.size() == 1 || ids.contains(user.getId()) || user.getRoles().contains(Role.ADMIN)))
                 return false;
             if(params.contains("banned") && (!user.getRoles().contains(Role.ADMIN) || ids.contains(user.getId())))
                 return false;
@@ -62,7 +64,10 @@ public class UserAuthorizeService extends Authorized {
         try {
             if (!user.getRoles().contains(Role.USER))
                 return false;
-            if (!(ids.size() == 1 && ids.contains(user.getId()) || user.getRoles().contains(Role.ULTIMATE)) && (params.contains("email") || params.contains("password")))
+            if (!(ids.size() == 1 &&
+                    ids.contains(user.getId())
+                    || user.getRoles().contains(Role.ULTIMATE))
+                    && (params.contains("email") || params.contains("password")))
                 return false;
         } catch (Exception e) {
             e.printStackTrace();

@@ -32,21 +32,27 @@ public class OutlineMediaAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            return checkUserForAdmin();
+            if(!checkUserForAdmin() && !user.getRoles().contains(Role.ADMIN))
+                return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     @Override
     protected boolean authorizePatch() {
         try {
-            return checkUserForAdmin();
+            if(params.contains("id") || params.contains("timestamp") || params.contains("outlineId"))
+                return false;
+            if(!checkUserForAdmin() && !user.getRoles().contains(Role.ADMIN))
+                return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     @Override

@@ -2,11 +2,11 @@ package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.Member;
 import com.studentscheduleapp.identityservice.models.MemberRole;
+import com.studentscheduleapp.identityservice.models.Role;
 import com.studentscheduleapp.identityservice.models.ScheduleTemplate;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -30,11 +30,13 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            return checkUserForAdmin();
+            if(!checkUserForGroupAdmin() && !user.getRoles().contains(Role.ADMIN))
+                return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
         try {
             if (params.contains("id") || params.contains("groupId"))
                 return false;
-            return checkUserForAdmin();
+            return checkUserForGroupAdmin();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -52,7 +54,7 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeCreate() {
         try {
-            return checkUserForAdmin();
+            return checkUserForGroupAdmin();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -68,7 +70,7 @@ public class ScheduleTemplateAuthorizeService extends Authorized {
             return false;
         }
     }
-    private boolean checkUserForAdmin() throws Exception {
+    private boolean checkUserForGroupAdmin() throws Exception {
         for(Long id : ids){
             ScheduleTemplate st = scheduleTemplateRepository.getById(id);
             if(st == null)

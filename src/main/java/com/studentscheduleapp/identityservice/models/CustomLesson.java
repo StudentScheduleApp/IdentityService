@@ -13,6 +13,4 @@ public class CustomLesson {
     private long groupId;
     private String name;
     private String teacher;
-
-
 }

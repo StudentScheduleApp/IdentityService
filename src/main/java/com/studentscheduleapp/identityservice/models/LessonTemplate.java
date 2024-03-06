@@ -13,5 +13,4 @@ public class LessonTemplate {
     private long lessonId;
     private long time;
     private String comment;
-
 }

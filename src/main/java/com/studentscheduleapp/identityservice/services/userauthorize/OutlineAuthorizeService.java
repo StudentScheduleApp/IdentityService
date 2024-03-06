@@ -30,16 +30,13 @@ public class OutlineAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            for (Long id : ids) {
-                if (checkUserForOutlineOwner() && !checkUserForAdmin())
-                    return false;
-
-            }
-            return checkUserForAdmin();
+            if(!checkUserForOutlineOwner() && !checkUserForAdmin() && !user.getRoles().contains(Role.ADMIN))
+                return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     @Override
@@ -47,11 +44,6 @@ public class OutlineAuthorizeService extends Authorized {
         try {
             if (params.contains("id") || params.contains("userId") || params.contains("specificLessonId"))
                 return false;
-            for (Long id : ids) {
-                if (checkUserForOutlineOwner() && !checkUserForAdmin())
-                    return false;
-
-            }
             return checkUserForAdmin();
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,17 +70,19 @@ public class OutlineAuthorizeService extends Authorized {
             return false;
         }
     }
-    private boolean checkUserForOutlineOwner(){
+    private boolean checkUserForOutlineOwner() throws Exception {
         if(user.getRoles().contains(Role.ADMIN)){
             return true;
         }
-        int validatedEntities = 0;
         for(Long id : ids){
-            if(id == user.getId()){
-                validatedEntities += 1;
+            Outline outline = outlineRepository.getById(id);
+            if(outline == null)
+                continue;
+            if(outline.getUserId() == user.getId()){
+                return true;
             }
         }
-        return validatedEntities == ids.size();
+        return false;
     }
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids){

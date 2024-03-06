@@ -1,13 +1,9 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
-import com.studentscheduleapp.identityservice.models.Member;
-import com.studentscheduleapp.identityservice.models.MemberRole;
-import com.studentscheduleapp.identityservice.models.ScheduleTemplate;
-import com.studentscheduleapp.identityservice.models.SpecificLesson;
+import com.studentscheduleapp.identityservice.models.*;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -31,19 +27,22 @@ public class SpecificLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            return false;
+            if(!user.getRoles().contains(Role.ADMIN) && !checkUserForGroupAdmin())
+                return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     @Override
     protected boolean authorizePatch() {
         try {
-            if (params.contains("id") || params.contains("groupId") || params.contains("lessonId") || params.contains("time"))
+            if (params.contains("id") || params.contains("groupId")
+                    || params.contains("lessonId") || params.contains("time"))
                 return false;
-            return checkUserForAdmin();
+            return checkUserForGroupAdmin();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -53,11 +52,14 @@ public class SpecificLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeCreate() {
         try {
-            return false;
+            if(!user.getRoles().contains(Role.ADMIN) && !checkUserForGroupAdmin()){
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     @Override
@@ -69,7 +71,7 @@ public class SpecificLessonAuthorizeService extends Authorized {
             return false;
         }
     }
-    private boolean checkUserForAdmin() throws Exception {
+    private boolean checkUserForGroupAdmin() throws Exception {
         for(Long id : ids){
             SpecificLesson st = specificLessonRepository.getById(id);
             if(st == null)

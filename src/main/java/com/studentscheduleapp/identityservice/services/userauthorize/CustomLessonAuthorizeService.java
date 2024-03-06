@@ -28,11 +28,13 @@ public class CustomLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            return checkUserForAdmin();
+            if(!checkUserForAdmin() && !user.getRoles().contains(Role.ADMIN))
+                return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     @Override

@@ -31,11 +31,13 @@ public class LessonTemplateAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            return checkUserForAdmin();
+            if(!checkUserForAdmin() && !user.getRoles().contains(Role.ADMIN))
+                return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     @Override
@@ -43,7 +45,6 @@ public class LessonTemplateAuthorizeService extends Authorized {
         try {
             if (params.contains("id") || params.contains("scheduleTemplateId"))
                 return false;
-            List<Member> members = memberRepository.getByUserId(user.getId());
             return checkUserForAdmin();
         } catch (Exception e) {
             e.printStackTrace();
