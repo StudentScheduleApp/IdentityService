@@ -89,7 +89,6 @@ public class AuthorizeUserService {
             authorizeEntity.setParams(Collections.emptyList());
         if (authorizeEntity.getIds() == null)
             authorizeEntity.setIds(Collections.emptyList());
-        log.error(token);
         auth.init(token, authorizeEntity.getType(), authorizeEntity.getIds(), authorizeEntity.getParams());
         if (auth.authorize()){
             log.info("authorize successful:" +
