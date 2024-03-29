@@ -89,11 +89,13 @@ public class AuthorizeUserService {
             authorizeEntity.setParams(Collections.emptyList());
         if (authorizeEntity.getIds() == null)
             authorizeEntity.setIds(Collections.emptyList());
+        log.error(token);
         auth.init(token, authorizeEntity.getType(), authorizeEntity.getIds(), authorizeEntity.getParams());
         if (auth.authorize()){
             log.info("authorize successful:" +
                     " user: " + jwtProvider.getAccessClaims(token).getId() +
                     " entity: " + authorizeEntity.getEntity().name() +
+                    " type: " + authorizeEntity.getType().name() +
                     " params: " + Arrays.toString(authorizeEntity.getParams().toArray()) +
                     " ids: " + Arrays.toString(authorizeEntity.getIds().toArray()));
             return true;

@@ -52,7 +52,7 @@ public class CustomLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeCreate() {
         try {
-            return checkUserForAdmin();
+            return checkUserForAdminCreate();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -71,6 +71,17 @@ public class CustomLessonAuthorizeService extends Authorized {
     private boolean checkUserForAdmin() throws Exception {
         for(Long id : ids){
             List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
+            if(members == null || members.isEmpty())
+                continue;
+            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean checkUserForAdminCreate() throws Exception {
+        for(Long id : ids){
+            List<Member> members = memberRepository.getByGroupId(id);
             if(members == null || members.isEmpty())
                 continue;
             if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){

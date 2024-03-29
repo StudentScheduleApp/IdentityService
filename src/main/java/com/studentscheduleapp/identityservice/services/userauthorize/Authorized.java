@@ -46,7 +46,7 @@ public abstract class Authorized {
             log.error("authorize failed: " + errors);
         }
         if (user == null || user.getBanned()) {
-            log.warn("authorize failed: user banned or not exists");
+            log.warn("authorize failed: user banned, not exists or invalid token");
             return false;
         }
         switch (type){
