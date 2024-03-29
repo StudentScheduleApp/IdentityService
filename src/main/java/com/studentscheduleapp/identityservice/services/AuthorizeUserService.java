@@ -93,7 +93,7 @@ public class AuthorizeUserService {
         auth.init(token, authorizeEntity.getType(), authorizeEntity.getIds(), authorizeEntity.getParams());
         if (auth.authorize()){
             log.info("authorize successful:" +
-                    " user: " + jwtProvider.getAccessClaims(token).getId() +
+                    " user: " + jwtProvider.getAccessClaims(token).getSubject() +
                     " entity: " + authorizeEntity.getEntity().name() +
                     " type: " + authorizeEntity.getType().name() +
                     " params: " + Arrays.toString(authorizeEntity.getParams().toArray()) +
