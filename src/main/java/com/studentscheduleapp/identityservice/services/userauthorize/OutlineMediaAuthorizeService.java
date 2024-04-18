@@ -58,7 +58,7 @@ public class OutlineMediaAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeCreate() {
         try {
-            return checkUserForMember();
+            return checkUserForMemberCreate();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -101,6 +101,21 @@ public class OutlineMediaAuthorizeService extends Authorized {
                 return false;
             }
         }
-        return false;
+        return true;
+    }
+
+    private boolean checkUserForMemberCreate() throws Exception {
+        for(Long id : ids){
+            Outline outline = outlineRepository.getById(id);
+            if(outline == null)
+                return false;
+            List<Member> memberList = memberRepository.getByGroupId(
+                    specificLessonRepository.getById(outline.getSpecificLessonId()).getGroupId()
+            );
+            if(!checkUtil.checkUserForMemberRole(memberList,user,MemberRole.MEMBER)){
+                return false;
+            }
+        }
+        return true;
     }
 }
