@@ -33,7 +33,7 @@ public class UserTokenService {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             jwtRefreshTokenRepository.save(new RefreshToken(user.getEmail(), refreshToken));
-            return new JwtResponse(user.getId(), accessToken, refreshToken);
+            return new JwtResponse(user.getId(), accessToken, refreshToken, jwtProvider.getAccessClaims(accessToken).getExpiration().getTime(), jwtProvider.getAccessClaims(refreshToken).getExpiration().getTime());
         } else {
             throw new AuthException();
         }
@@ -49,10 +49,10 @@ public class UserTokenService {
                 if(user == null)
                     throw new AuthException();
                 final String accessToken = jwtProvider.generateAccessToken(user);
-                return new JwtResponse(user.getId(), accessToken, null);
+                return new JwtResponse(user.getId(), accessToken, refreshToken, jwtProvider.getAccessClaims(accessToken).getExpiration().getTime(), jwtProvider.getAccessClaims(refreshToken).getExpiration().getTime());
             }
         }
-        return new JwtResponse(0, null, null);
+        throw new AuthException();
     }
     public User getUserByToken(@NonNull String accessToken) throws Exception {
         if (jwtProvider.validateAccessToken(accessToken)) {
@@ -75,7 +75,7 @@ public class UserTokenService {
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 jwtRefreshTokenRepository.save(new RefreshToken(user.getEmail(), refreshToken));
-                return new JwtResponse(user.getId(), accessToken, newRefreshToken);
+                return new JwtResponse(user.getId(), accessToken, newRefreshToken, jwtProvider.getAccessClaims(accessToken).getExpiration().getTime(), jwtProvider.getAccessClaims(newRefreshToken).getExpiration().getTime());
             }
         }
         throw new AuthException();
