@@ -21,13 +21,13 @@ import javax.security.auth.message.AuthException;
 public class UserTokenService {
 
     private final UserService userService;
+    private final JwtProvider jwtProvider;
     @Autowired
     private JwtRefreshTokenRepository jwtRefreshTokenRepository;
-    private final JwtProvider jwtProvider;
 
     public JwtResponse login(@NonNull JwtLoginRequest authRequest) throws Exception {
         final User user = userService.getByEmail(authRequest.getEmail());
-        if(user == null)
+        if (user == null)
             throw new AuthException();
         if (user.getPassword().equals(authRequest.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
@@ -46,7 +46,7 @@ public class UserTokenService {
             final String saveRefreshToken = jwtRefreshTokenRepository.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByEmail(login);
-                if(user == null)
+                if (user == null)
                     throw new AuthException();
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 return new JwtResponse(user.getId(), accessToken, refreshToken, jwtProvider.getAccessClaims(accessToken).getExpiration().getTime(), jwtProvider.getAccessClaims(refreshToken).getExpiration().getTime());
@@ -54,6 +54,7 @@ public class UserTokenService {
         }
         throw new AuthException();
     }
+
     public User getUserByToken(@NonNull String accessToken) throws Exception {
         if (jwtProvider.validateAccessToken(accessToken)) {
             final Claims claims = jwtProvider.getAccessClaims(accessToken);
@@ -70,7 +71,7 @@ public class UserTokenService {
             final String saveRefreshToken = jwtRefreshTokenRepository.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByEmail(login);
-                if(user == null)
+                if (user == null)
                     throw new AuthException();
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);

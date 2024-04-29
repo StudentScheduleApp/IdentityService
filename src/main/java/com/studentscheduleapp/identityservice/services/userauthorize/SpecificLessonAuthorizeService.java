@@ -1,21 +1,26 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
-import com.studentscheduleapp.identityservice.models.*;
-import com.studentscheduleapp.identityservice.repos.*;
+import com.studentscheduleapp.identityservice.models.Member;
+import com.studentscheduleapp.identityservice.models.MemberRole;
+import com.studentscheduleapp.identityservice.models.Role;
+import com.studentscheduleapp.identityservice.models.SpecificLesson;
+import com.studentscheduleapp.identityservice.repos.MemberRepository;
+import com.studentscheduleapp.identityservice.repos.SpecificLessonRepository;
+import com.studentscheduleapp.identityservice.repos.UserRepository;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
-import org.springframework.stereotype.Service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class SpecificLessonAuthorizeService extends Authorized {
+    private static final Logger log = LogManager.getLogger(SpecificLessonAuthorizeService.class);
     private final MemberRepository memberRepository;
     private final SpecificLessonRepository specificLessonRepository;
     private final CheckUtil checkUtil;
-    private static final Logger log = LogManager.getLogger(SpecificLessonAuthorizeService.class);
 
     public SpecificLessonAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, MemberRepository memberRepository, SpecificLessonRepository specificLessonRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
@@ -27,7 +32,7 @@ public class SpecificLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            if(!user.getRoles().contains(Role.ADMIN) && !checkUserForGroupAdmin())
+            if (!user.getRoles().contains(Role.ADMIN) && !checkUserForGroupAdmin())
                 return false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,7 +57,7 @@ public class SpecificLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeCreate() {
         try {
-            if(!user.getRoles().contains(Role.ADMIN) && !checkUserForGroupAdmin()){
+            if (!user.getRoles().contains(Role.ADMIN) && !checkUserForGroupAdmin()) {
                 return false;
             }
         } catch (Exception e) {
@@ -71,29 +76,31 @@ public class SpecificLessonAuthorizeService extends Authorized {
             return false;
         }
     }
+
     private boolean checkUserForGroupAdmin() throws Exception {
-        for(Long id : ids){
+        for (Long id : ids) {
             SpecificLesson st = specificLessonRepository.getById(id);
-            if(st == null)
+            if (st == null)
                 continue;
             List<Member> members = memberRepository.getByGroupId(st.getGroupId());
-            if(members == null || members.isEmpty())
+            if (members == null || members.isEmpty())
                 continue;
-            if(!checkUtil.checkUserForMemberRole(members,user, MemberRole.ADMIN)){
+            if (!checkUtil.checkUserForMemberRole(members, user, MemberRole.ADMIN)) {
                 return false;
             }
         }
         return true;
     }
+
     private boolean checkUserForMember() throws Exception {
-        for(Long id : ids){
+        for (Long id : ids) {
             SpecificLesson st = specificLessonRepository.getById(id);
-            if(st == null)
+            if (st == null)
                 continue;
             List<Member> members = memberRepository.getByGroupId(st.getGroupId());
-            if(members == null || members.isEmpty())
+            if (members == null || members.isEmpty())
                 continue;
-            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
+            if (!checkUtil.checkUserForMemberRole(members, user, MemberRole.MEMBER)) {
                 return false;
             }
         }

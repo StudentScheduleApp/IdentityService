@@ -2,7 +2,6 @@ package com.studentscheduleapp.identityservice.http;
 
 import com.studentscheduleapp.identityservice.properties.GlobalProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -11,7 +10,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
 
 public class HeaderRequestInterceptor implements ClientHttpRequestInterceptor {
-
 
 
     @Autowired

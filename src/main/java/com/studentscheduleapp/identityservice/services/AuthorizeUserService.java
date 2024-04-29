@@ -1,24 +1,22 @@
 package com.studentscheduleapp.identityservice.services;
 
-import com.studentscheduleapp.identityservice.models.*;
 import com.studentscheduleapp.identityservice.models.api.AuthorizeEntity;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.*;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class AuthorizeUserService {
 
+    private static final Logger log = LogManager.getLogger(AuthorizeUserService.class);
     @Autowired
     private CustomLessonRepository customLessonRepository;
     @Autowired
@@ -43,7 +41,6 @@ public class AuthorizeUserService {
     private JwtProvider jwtProvider;
     @Autowired
     private CheckUtil checkUtil;
-    private static final Logger log = LogManager.getLogger(AuthorizeUserService.class);
 
     public boolean authorize(String token, AuthorizeEntity authorizeEntity) {
         Authorized auth;
@@ -90,7 +87,7 @@ public class AuthorizeUserService {
         if (authorizeEntity.getIds() == null)
             authorizeEntity.setIds(Collections.emptyList());
         auth.init(token, authorizeEntity.getType(), authorizeEntity.getIds(), authorizeEntity.getParams());
-        if (auth.authorize()){
+        if (auth.authorize()) {
             log.info("authorize successful:" +
                     " user: " + jwtProvider.getAccessClaims(token).getSubject() +
                     " entity: " + authorizeEntity.getEntity().name() +

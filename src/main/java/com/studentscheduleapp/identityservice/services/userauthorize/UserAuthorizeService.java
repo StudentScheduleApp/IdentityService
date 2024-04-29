@@ -1,17 +1,18 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.Role;
-import com.studentscheduleapp.identityservice.repos.*;
+import com.studentscheduleapp.identityservice.repos.UserRepository;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
-import org.springframework.stereotype.Service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 
 @Service
 public class UserAuthorizeService extends Authorized {
 
     private static final Logger log = LogManager.getLogger(UserAuthorizeService.class);
+
     public UserAuthorizeService(UserRepository ur, JwtProvider jwtProvider) {
         super(ur, jwtProvider);
     }
@@ -29,13 +30,13 @@ public class UserAuthorizeService extends Authorized {
     @Override
     protected boolean authorizePatch() {
         try {
-            if(params.contains("id") || params.contains("email") || params.contains("password"))
+            if (params.contains("id") || params.contains("email") || params.contains("password"))
                 return false;
-            if((params.contains("firstName") || params.contains("lastName")
+            if ((params.contains("firstName") || params.contains("lastName")
                     || params.contains("avaUrl")) &&
                     !(ids.size() == 1 || ids.contains(user.getId()) || user.getRoles().contains(Role.ADMIN)))
                 return false;
-            if(params.contains("banned") && (!user.getRoles().contains(Role.ADMIN) || ids.contains(user.getId())))
+            if (params.contains("banned") && (!user.getRoles().contains(Role.ADMIN) || ids.contains(user.getId())))
                 return false;
             if (params.contains("roles") && !user.getRoles().contains(Role.ULTIMATE))
                 return false;

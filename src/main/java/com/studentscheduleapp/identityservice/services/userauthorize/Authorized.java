@@ -1,11 +1,11 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
 import com.studentscheduleapp.identityservice.models.AuthorizeType;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import com.studentscheduleapp.identityservice.models.User;
 import com.studentscheduleapp.identityservice.repos.UserRepository;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,12 +16,11 @@ public abstract class Authorized {
     private static final Logger log = LogManager.getLogger(Authorized.class);
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
-    private AuthorizeType type;
-    private String token;
-
     protected User user;
     protected List<Long> ids;
     protected List<String> params;
+    private AuthorizeType type;
+    private String token;
 
     public Authorized(UserRepository userRepository, JwtProvider jwtProvider) {
         this.userRepository = userRepository;
@@ -29,7 +28,7 @@ public abstract class Authorized {
 
     }
 
-    public final void init(String token, AuthorizeType type, List<Long> ids, List<String> params){
+    public final void init(String token, AuthorizeType type, List<Long> ids, List<String> params) {
         this.token = token;
         this.type = type;
         this.ids = ids;
@@ -49,7 +48,7 @@ public abstract class Authorized {
             log.warn("authorize failed: user banned, not exists or invalid token");
             return false;
         }
-        switch (type){
+        switch (type) {
             case GET:
                 return authorizeGet();
             case CREATE:
@@ -66,8 +65,11 @@ public abstract class Authorized {
     }
 
     protected abstract boolean authorizeDelete();
+
     protected abstract boolean authorizePatch();
+
     protected abstract boolean authorizeCreate();
+
     protected abstract boolean authorizeGet();
 }
 

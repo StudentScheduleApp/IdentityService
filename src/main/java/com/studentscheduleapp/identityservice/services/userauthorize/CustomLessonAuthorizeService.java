@@ -1,23 +1,26 @@
 package com.studentscheduleapp.identityservice.services.userauthorize;
 
-import com.studentscheduleapp.identityservice.models.*;
-import com.studentscheduleapp.identityservice.repos.*;
+import com.studentscheduleapp.identityservice.models.Member;
+import com.studentscheduleapp.identityservice.models.MemberRole;
+import com.studentscheduleapp.identityservice.models.Role;
+import com.studentscheduleapp.identityservice.repos.CustomLessonRepository;
+import com.studentscheduleapp.identityservice.repos.MemberRepository;
+import com.studentscheduleapp.identityservice.repos.UserRepository;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CustomLessonAuthorizeService extends Authorized {
+    private static final Logger log = LogManager.getLogger(CustomLessonAuthorizeService.class);
     private final CustomLessonRepository customLessonRepository;
     private final MemberRepository memberRepository;
     private final CheckUtil checkUtil;
 
-    private static final Logger log = LogManager.getLogger(CustomLessonAuthorizeService.class);
     public CustomLessonAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, CustomLessonRepository customLessonRepository, MemberRepository memberRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
         this.customLessonRepository = customLessonRepository;
@@ -28,7 +31,7 @@ public class CustomLessonAuthorizeService extends Authorized {
     @Override
     protected boolean authorizeDelete() {
         try {
-            if(!checkUserForAdmin() && !user.getRoles().contains(Role.ADMIN))
+            if (!checkUserForAdmin() && !user.getRoles().contains(Role.ADMIN))
                 return false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,34 +71,37 @@ public class CustomLessonAuthorizeService extends Authorized {
             return false;
         }
     }
+
     private boolean checkUserForAdmin() throws Exception {
-        for(Long id : ids){
+        for (Long id : ids) {
             List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
-            if(members == null || members.isEmpty())
+            if (members == null || members.isEmpty())
                 continue;
-            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){
+            if (!checkUtil.checkUserForMemberRole(members, user, MemberRole.ADMIN)) {
                 return false;
             }
         }
         return true;
     }
+
     private boolean checkUserForAdminCreate() throws Exception {
-        for(Long id : ids){
+        for (Long id : ids) {
             List<Member> members = memberRepository.getByGroupId(id);
-            if(members == null || members.isEmpty())
+            if (members == null || members.isEmpty())
                 continue;
-            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.ADMIN)){
+            if (!checkUtil.checkUserForMemberRole(members, user, MemberRole.ADMIN)) {
                 return false;
             }
         }
         return true;
     }
+
     private boolean checkUserForMember() throws Exception {
-        for(Long id : ids){
+        for (Long id : ids) {
             List<Member> members = memberRepository.getByGroupId(customLessonRepository.getById(id).getGroupId());
-            if(members == null || members.isEmpty())
+            if (members == null || members.isEmpty())
                 continue;
-            if(!checkUtil.checkUserForMemberRole(members,user,MemberRole.MEMBER)){
+            if (!checkUtil.checkUserForMemberRole(members, user, MemberRole.MEMBER)) {
                 return false;
             }
         }

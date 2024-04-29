@@ -15,9 +15,11 @@ public class UserService {
     public User getByEmail(String email) throws Exception {
         return userRepository.getByEmail(email);
     }
+
     public User getById(long id) throws Exception {
         return userRepository.getById(id);
     }
+
     public User create(User user) throws Exception {
         return userRepository.save(user);
     }

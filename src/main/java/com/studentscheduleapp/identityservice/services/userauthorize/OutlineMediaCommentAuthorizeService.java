@@ -4,22 +4,21 @@ import com.studentscheduleapp.identityservice.models.*;
 import com.studentscheduleapp.identityservice.repos.*;
 import com.studentscheduleapp.identityservice.security.JwtProvider;
 import com.studentscheduleapp.identityservice.services.userauthorize.utils.CheckUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class OutlineMediaCommentAuthorizeService extends Authorized {
+    private static final Logger log = LogManager.getLogger(OutlineMediaCommentAuthorizeService.class);
     private final MemberRepository memberRepository;
     private final OutlineMediaCommentRepository outlineMediaCommentRepository;
     private final OutlineMediaRepository outlineMediaRepository;
     private final OutlineRepository outlineRepository;
     private final SpecificLessonRepository specificLessonRepository;
     private final CheckUtil checkUtil;
-    private static final Logger log = LogManager.getLogger(OutlineMediaCommentAuthorizeService.class);
 
     public OutlineMediaCommentAuthorizeService(UserRepository userRepository, JwtProvider jwtProvider, MemberRepository memberRepository, OutlineMediaCommentRepository outlineMediaCommentRepository, OutlineMediaRepository outlineMediaRepository, OutlineRepository outlineRepository, SpecificLessonRepository specificLessonRepository, CheckUtil checkUtil) {
         super(userRepository, jwtProvider);
@@ -70,42 +69,45 @@ public class OutlineMediaCommentAuthorizeService extends Authorized {
             return false;
         }
     }
+
     private boolean checkUserForCommentOwner() throws Exception {
-        for(Long id : ids){
+        for (Long id : ids) {
             OutlineMediaComment outlineMediaComment = outlineMediaCommentRepository.getById(id);
-            if(outlineMediaComment == null)
+            if (outlineMediaComment == null)
                 continue;
-            if(outlineMediaComment.getUserId() != user.getId()){
+            if (outlineMediaComment.getUserId() != user.getId()) {
                 return false;
             }
         }
         return true;
     }
+
     private boolean checkUserForAdmin() throws Exception {
-        for(Long id : ids){
+        for (Long id : ids) {
             OutlineMediaComment outlineMediaComment = outlineMediaCommentRepository.getById(id);
-            if(outlineMediaComment == null)
+            if (outlineMediaComment == null)
                 continue;
             OutlineMedia outlineMedia = outlineMediaRepository.getById(outlineMediaComment.getMediaId());
             Outline outline = outlineRepository.getById(outlineMedia.getOutlineId());
             SpecificLesson specificLesson = specificLessonRepository.getById(outline.getSpecificLessonId());
             List<Member> memberList = memberRepository.getByGroupId(specificLesson.getGroupId());
-            if(!checkUtil.checkUserForMemberRole(memberList,user,MemberRole.ADMIN)){
+            if (!checkUtil.checkUserForMemberRole(memberList, user, MemberRole.ADMIN)) {
                 return false;
             }
         }
         return true;
     }
+
     private boolean checkUserForMember() throws Exception {
-        for(Long id : ids){
+        for (Long id : ids) {
             OutlineMediaComment outlineMediaComment = outlineMediaCommentRepository.getById(id);
-            if(outlineMediaComment == null)
+            if (outlineMediaComment == null)
                 continue;
             OutlineMedia outlineMedia = outlineMediaRepository.getById(outlineMediaComment.getMediaId());
             Outline outline = outlineRepository.getById(outlineMedia.getOutlineId());
             SpecificLesson specificLesson = specificLessonRepository.getById(outline.getSpecificLessonId());
             List<Member> memberList = memberRepository.getByGroupId(specificLesson.getGroupId());
-            if(!checkUtil.checkUserForMemberRole(memberList,user,MemberRole.MEMBER)){
+            if (!checkUtil.checkUserForMemberRole(memberList, user, MemberRole.MEMBER)) {
                 return false;
             }
         }

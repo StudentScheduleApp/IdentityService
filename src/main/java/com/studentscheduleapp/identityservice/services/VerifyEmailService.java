@@ -13,7 +13,7 @@ import java.util.Map;
 public class VerifyEmailService {
 
 
-    private Map<String, Long> emailCodes = new HashMap<>();
+    private final Map<String, Long> emailCodes = new HashMap<>();
 
     @Autowired
     private MailRepository mailRepository;
@@ -29,8 +29,8 @@ public class VerifyEmailService {
         emailCodes.put(email, code);
     }
 
-    public boolean verify(VerifyEmailRequest verifyEmailRequest){
-        if(emailCodes.get(verifyEmailRequest.getEmail()) != null && emailCodes.get(verifyEmailRequest.getEmail()).equals(verifyEmailRequest.getCode())){
+    public boolean verify(VerifyEmailRequest verifyEmailRequest) {
+        if (emailCodes.get(verifyEmailRequest.getEmail()) != null && emailCodes.get(verifyEmailRequest.getEmail()).equals(verifyEmailRequest.getCode())) {
             emailCodes.remove(verifyEmailRequest.getEmail());
             return true;
         }

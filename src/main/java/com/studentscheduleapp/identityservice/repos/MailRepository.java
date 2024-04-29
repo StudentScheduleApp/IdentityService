@@ -20,7 +20,7 @@ public class MailRepository {
 
     public void send(SendMailRequest mail) throws Exception {
         ResponseEntity<Void> r = restTemplate.postForEntity(mailServiceProperties.getUri() + mailServiceProperties.getSendPath(), mail, Void.class);
-        if(!r.getStatusCode().is2xxSuccessful() && !r.getStatusCode().equals(HttpStatus.NOT_FOUND))
+        if (!r.getStatusCode().is2xxSuccessful() && !r.getStatusCode().equals(HttpStatus.NOT_FOUND))
             throw new Exception("request to " + mailServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 }
