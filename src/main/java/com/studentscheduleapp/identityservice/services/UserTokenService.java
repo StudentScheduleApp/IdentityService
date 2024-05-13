@@ -33,7 +33,9 @@ public class UserTokenService {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             jwtRefreshTokenRepository.save(new RefreshToken(user.getEmail(), refreshToken));
-            return new JwtResponse(user.getId(), accessToken, refreshToken, jwtProvider.getAccessClaims(accessToken).getExpiration().getTime(), jwtProvider.getAccessClaims(refreshToken).getExpiration().getTime());
+            return new JwtResponse(user.getId(), accessToken, refreshToken,
+                    jwtProvider.getAccessClaims(accessToken).getExpiration().getTime(),
+                    jwtProvider.getRefreshClaims(refreshToken).getExpiration().getTime());
         } else {
             throw new AuthException();
         }
